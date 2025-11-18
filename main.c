@@ -35,23 +35,26 @@
 
 #define TAM_LINEA 16
 #define NUM_FILAS 8
+#define T_MISS 20
+#define T_HIT 1
 
 // Variables Globales
 
 // Linea de caché
 typedef struct 
 {
-    unsigned char ETQ; // Guarda el valor decimal de la etiqueta
-    unsigned char Data[TAM_LINEA]; // Guarda las 16 Bytes/palabras
+    unsigned char etq; // Guarda el valor decimal de la etiqueta
+    unsigned char data[TAM_LINEA]; // Guarda las 16 Bytes/palabras
 } 
 T_CACHE_LINE;
 
 // Funciones del programa
-void limpiar_cache(T_CACHE_LINE tbl[NUM_FILAS]);
-void volcar_cache(T_CACHE_LINE *tbl);
-void parsear_direccion(unsigned int addr, int *ETQ, int *palabra, int *linea, int *bloque);
-void tratar_fallo(T_CACHE_LINE *tbl, char *MRAM, int ETQ, int linea, int bloque);
-
+void limpiar_cache(T_CACHE_LINE simul_cache[NUM_FILAS]);
+void parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, int *bloque);
+void tratar_fallo(T_CACHE_LINE *simul_cache, char *m_ram, 
+    int num_fallos, int addr, int etq, int linea, int palabra, int bloque);
+void volcar_cache(T_CACHE_LINE *simul_cache);
+    
 // Funciones auxiliares
 void clearBuffer();
 
@@ -64,52 +67,61 @@ int main(int argc, char *argv[])
 
     // todo comprobar que accesos_memoria.txt existe o devolver EXIT_FAILURE
     // todo comprobar que CONTENTS_RAM.bin existe o devolver EXIT_FAILURE
-    // todo declaramos fld_accesos_memoria 
-    // todo declaramos fld_contents_ram
+    // todo declaramos fd_accesos_memoria 
+    // todo declaramos fd_contents_ram
 
     // todo Declaracion de variables
     T_CACHE_LINE simul_cache[NUM_FILAS];
     char simul_ram[4096];
     char texto[100];
-    int globaltime = 0;
-    int numfallos = 0;
+    int globaltime   = 0,
+        num_fallos   = 0,
+        num_aciertos = 0,
+        t_access     = 0;
 
-    // todo limpiar_cache(T_CACHE_LINE tbl[NUM_FILAS]);
+    // todo limpiar_cache(T_CACHE_LINE simul_cache[NUM_FILAS]);
 
     // todo simul_ram = contenido de CONTENTS_RAM.bin
     
     // todo leemos las direcciones de memoria de accesos_memoria.txt, de una en una
-    // todo while(fld_accesos_memoria != '\0)
-        // todo int addr = 0
-        // todo int *ETQ
-        // todo int *palabra
-        // todo int *linea
-        // todo int *bloque
+    // todo while(fd_accesos_memoria != '\0)
+        unsigned int addr = 0;
+        int etq     = 0,
+            palabra = 0,
+            linea   = 0,
+            bloque  = 0;
 
         // todo guardamos la direccion de memoria actual en la variable addr 
         
-        // todo parsear_direccion(unsigned int addr, int *ETQ, int *palabra, int *linea, int *bloque)
+        // todo parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, int *bloque)
 
-        // todo comprueba si ETQ actual es igual a simul_cache[linea].ETQ    
+        // todo comprueba si etq actual es igual a simul_cache[linea].etq    
 
             // todo Si no coincide:  
-                // todo ++numfallos
-                // todo void tratar_fallo(T_CACHE_LINE *tbl, char *MRAM, int ETQ, int linea, int bloque)
+                // todo ++num_fallos
+                // todo void tratar_fallo(*simul_cache, *m_ram, num_fallos, addr, etq, linea, palabra, int bloque)
+                // todo      
                 // todo globaltime += 20
             
             // todo si coincide:
-                // todo imprimimos “T: %d, Acierto de CACHE, ADDR %04X Label %X linea %02X palabra %02X DATO %02X”. 
+                // todo globaltime += T_HIT
+                // todo ++num_aciertos
+                // todo imprimimos:
+                // todo “T: %d, Acierto de CACHE, ADDR %04X, etq %X, linea %02X, palabra %02X, DATO %02X”. 
                 // todo Cada carácter leído se añade a la variable llamada texto
 
-            // todo El proceso vuelca el contenido de la caché por pantalla con el formato indicado
-            // todo Los datos se imprimen de izquierda a derecha de mayor a menor peso. Esto significa que el byte situado más a la izquierda es el byte 15 de la línea y el situado a la derecha el byte 0.
+    // todo Volcamos el contenido de la cache
+    // todo Los datos se imprimen de izquierda a derecha de mayor a menor peso. 
 
     // todo sleep() de 1 segundo.
 
-    // todo imprimimos el número total de accesos, número de fallos y tiempo medio de acceso.
-    // todo imprimimos el texto leído carácter a carácter desde la caché.
+    // todo t_access = globaltime / (num_aciertos + num_fallos)
 
-    // todo VolcarCACHE(T_CACHE_LINE *tbl);
+    // todo imprimimos num_aciertos, num_fallos, t_access
+
+    // todo imprimimos el texto leído carácter a carácter desde simul_cache[].data
+
+    // todo VolcarCACHE(T_CACHE_LINE *simul_cache);
 
     printf("\n_________________________________________EXIT\n\n");
     return EXIT_SUCCESS;
@@ -120,13 +132,13 @@ int main(int argc, char *argv[])
 
 // Funciones del programa
 /**
- * @brief   inicializamos los valores ETQ y data
+ * @brief   inicializamos los valores etq y data
  * 
- * @param[out] tbl   Contenedor de las líneas y etiquetas de cache 
+ * @param[out] simul_cache   Contenedor de las líneas y etiquetas de cache 
  */
-void limpiar_cache(T_CACHE_LINE tbl[NUM_FILAS])
+void limpiar_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
 {
-    // todo inicializamos los campos ETQ a FF o 1111 1111
+    // todo inicializamos los campos etq a FF o 1111 1111
     // todo inicializamos los campos data a 23 o 0010 0011
 }
 
@@ -134,46 +146,65 @@ void limpiar_cache(T_CACHE_LINE tbl[NUM_FILAS])
  * @brief descompone la direccion de memoria en etiqueta, palabra, linea, bloque
  * 
  * @param[in] addr      Dirección de memoria actual   
- * @param[out] ETQ          
+ * @param[out] etq          
  * @param[out] palabra     
  * @param[out] linea       
  * @param[out] bloque    
  */
-void parsear_direccion(unsigned int addr, int *ETQ, int *palabra, int *linea, int *bloque)
+void parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, int *bloque)
 {
-    // todo Obtiene el número de línea de la direccion
+    // todo Obtiene la etiqueta, palabra, linea y bloque de la direccion
 }
 
 /**
- * @param[in,out] tbl  
- * @param[in,out] MRAM  Simulador de memoria RAM
- * @param[in] ETQ       
+ * @brief 
+ * 
+ * @param[in,out] simul_cache   Simulador cache. Contiene las lineas  
+ * @param[in,out] m_ram         Simulador RAM. Contiene los bloques        
+ * @param[in] num_fallos 
+ * @param[in] addr              
+ * @param[in] etq       
  * @param[in] linea     
+ * @param[in] palabra     
  * @param[in] bloque       
  */
-void tratar_fallo(T_CACHE_LINE *tbl, char *MRAM, int ETQ, int linea, int bloque)
+void tratar_fallo(T_CACHE_LINE *simul_cache, char *m_ram, 
+    int num_fallos, int addr, int etq, int linea, int palabra, int bloque)
 {
-    // todo imprimimos: “T: %d, Fallo de CACHE %d, ADDR %04X, etq %X, linea %02X, palabra %02X, bloque %02X”. 
-        // todo   printf            Descripcion         Variable
+    // todo imprimimos: 
+        // todo “T: %d, Fallo de CACHE %d, ADDR %04X, etq %X, linea %02X, palabra %02X, bloque %02X”. 
+
         // todo T: %d               Instante del fallo  globaltime
-        // todo Fallo de CACHE %d   Contador de fallos  ??????????????   
-        // todo ADDR %04X           Direccion Actual    ??????????????
-        // todo etq %X              Etiqueta            ETQ
+        // todo Fallo de CACHE %d   Contador de fallos  num_fallos   
+        // todo ADDR %04X           Direccion Actual    ADDR
+        // todo etq %X              Etiqueta            etq
         // todo linea %02X          Linea               linea
-        // todo palabra %02X        Palabra             ??????????????
+        // todo palabra %02X        Palabra             palabra
         // todo bloque %02X         Bloque              bloque
-        
-    // todo Se copia el bloque correspondiente desde el array RAM y se imprime un mensaje indicando que se está cargando el bloque X en la línea Y
-    // todo Se actualizan tanto el campo Label como los 8 bytes de datos de la línea.
+
+    // todo Se copia el bloque desde m_ram a simul_cache[linea].data
+
+    // todo se imprime un mensaje indicando que se está cargando el bloque X en la línea Y
+
+    // todo Se actualiza el campo etiqueta de la caché simul_cache[linea].etq = etq
+
+    // todo Se traen los 16 bytes de datos del bloque a la línea
+        // todo for(int i = 0; i < TAM_LINEA; i++)
+        // todo {
+        // todo     simul_cache[linea].data[i] = m_ram[i]
+        // todo } 
 }
 
 /**
- * @param[in,out] tbl  
+ * @param[in,out] simul_cache     
  */
-void volcar_cache(T_CACHE_LINE *tbl)
+void volcar_cache(T_CACHE_LINE *simul_cache)
 {
-    // todo Volcamos los contenidos de los 128 bytes de información (8 líneas de 16 bytes cada una) de la caché en CONTENTS_CACHE.bin. 
-    // todo El byte 0 de ese fichero es el byte 0 de la línea 0 de la caché y el byte 128, es el byte 15 de la línea 15.
+    // todo Creamos un archivo binario llamado CONTENTS_CACHE.bin
+
+    // todo Volcamos los contenidos de los 128 bytes de información de la caché en CONTENTS_CACHE.bin
+        // todo El byte 0 del fichero es el byte 0 de la línea 0 de la caché 
+        // todo El byte 128, es el byte 15 de la línea 15.
 }
 
 
