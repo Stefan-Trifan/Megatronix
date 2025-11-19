@@ -86,6 +86,7 @@ int main(int argc, char *argv[])
     T_CACHE_LINE simul_cache[NUM_FILAS] = {0};
     char simul_ram[4096];
     char texto[100];
+    unsigned int addr = 0;
     int globaltime   = 0,
         num_fallos   = 0,
         num_aciertos = 0,
@@ -97,19 +98,18 @@ int main(int argc, char *argv[])
     // Volcamos el contenido de de CONTENTS_RAM.bin en simul_ram (Nuestra RAM virtual) 
     fread(simul_ram ,1 , 4096, fd_contents_ram);
 
-    // Leemos las direcciones de memoria mediante Correspondencia Directa
-    while(fd_accesos_memoria != EOF)
+    // Leemos direcciones de memoria de una en una, hasta que se acaben
+    // y vas vamos guardando en addr
+    // Para cada direccion, la parsea y la resuelve mediante Correspondencia Directa
+    while(fscanf(fd_accesos_memoria, "%x", &addr) == 1)
     {
-        unsigned int addr = 0;
+        
         int etq     = 0,
             palabra = 0,
             linea   = 0,
             bloque  = 0;
+            
 
-        // todo leemos las direcciones de memoria de accesos_memoria.txt, de una en una
-
-        // todo guardamos la direccion de memoria actual en la variable addr 
-        
         // todo parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, int *bloque)
 
         // todo comprueba si etq actual es igual a simul_cache[linea].etq    
@@ -259,7 +259,7 @@ int comprobar_lectura_ficheros(FILE *fd_accesos_memoria, FILE *fd_contents_ram)
     }
     else
     {
-        printf(GREEN"\"accesos_memoria.txt\" y \"CONTENTS_RAM.bin\" se han abieto correctamente.\n"RESET);
+        printf(GREEN"\"accesos_memoria.txt\" y \"CONTENTS_RAM.bin\" se han abieto correctamente.\n\n"RESET);
         archivos_leidos = 1;
     }
     return archivos_leidos;
