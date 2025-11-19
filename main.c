@@ -38,7 +38,10 @@
 #define T_MISS 20
 #define T_HIT 1
 
-// Variables Globales
+#define RED "\033[1;31m"
+#define GREEN "\033[1;32m"
+#define YELLOW "\033[1;33m"
+#define RESET "\033[0m"
 
 // Linea de caché
 typedef struct 
@@ -65,13 +68,34 @@ int main(int argc, char *argv[])
 {
     printf("\n_________________________________________START\n\n");
 
-    // todo comprobar que accesos_memoria.txt existe o devolver EXIT_FAILURE
-    // todo comprobar que CONTENTS_RAM.bin existe o devolver EXIT_FAILURE
-    // todo declaramos fd_accesos_memoria 
-    // todo declaramos fd_contents_ram
+    // Leemos los archivos
+    FILE *fd_accesos_memoria = fopen("./assets/accesos_memoria.txt", "r");
+    FILE *fd_contents_ram    = fopen("./assets/CONTENTS_RAM.bin", "r");
 
-    // todo Declaracion de variables
-    T_CACHE_LINE simul_cache[NUM_FILAS];
+    // Comprobamos que los archivos se han leído con éxito
+    if(fd_accesos_memoria == NULL)
+    {
+        printf(RED
+            "ERROR: No ha sido posible crear el fichero \"accesos_memoria.txt\"\n"YELLOW
+            "Asegurate de que esta bien nombrado y esta dentro de la carpeta /assets"RED
+            "\n\n_________________________________________FAIL\n\n"RESET);
+        return EXIT_FAILURE;
+    }
+    else if(fd_contents_ram == NULL)
+    {
+        printf(RED
+            "ERROR: No ha sido posible crear el fichero \"CONTENTS_RAM.bin\"\n"YELLOW
+            "Asegurate de que esta bien nombrado y esta dentro de la carpeta /assets"RED
+            "\n\n_________________________________________FAIL\n\n"RESET);
+        return EXIT_FAILURE;
+    }
+    else
+    {
+        printf(GREEN"\"accesos_memoria.txt\" y \"CONTENTS_RAM.bin\" se han abieto correctamente.\n"RESET);
+    }
+
+    // Declaracion de variables
+    T_CACHE_LINE simul_cache[NUM_FILAS] = {0};
     char simul_ram[4096];
     char texto[100];
     int globaltime   = 0,
@@ -79,10 +103,13 @@ int main(int argc, char *argv[])
         num_aciertos = 0,
         t_access     = 0;
 
-    // todo limpiar_cache(T_CACHE_LINE simul_cache[NUM_FILAS]);
+    limpiar_cache(simul_cache);
 
-    // todo simul_ram = contenido de CONTENTS_RAM.bin
     
+
+ /*    
+    // todo simul_ram = contenido de CONTENTS_RAM.bin
+
     // todo leemos las direcciones de memoria de accesos_memoria.txt, de una en una
     // todo while(fd_accesos_memoria != '\0)
         unsigned int addr = 0;
@@ -121,7 +148,7 @@ int main(int argc, char *argv[])
 
     // todo imprimimos el texto leído carácter a carácter desde simul_cache[].data
 
-    // todo VolcarCACHE(T_CACHE_LINE *simul_cache);
+    // todo VolcarCACHE(T_CACHE_LINE *simul_cache); */
 
     printf("\n_________________________________________EXIT\n\n");
     return EXIT_SUCCESS;
