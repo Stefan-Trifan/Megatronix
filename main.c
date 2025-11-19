@@ -103,14 +103,22 @@ int main(int argc, char *argv[])
     // Para cada direccion, la parsea y la resuelve mediante Correspondencia Directa
     while(fscanf(fd_accesos_memoria, "%x", &addr) == 1)
     {
-        
         int etq     = 0,
             palabra = 0,
             linea   = 0,
             bloque  = 0;
             
+        // todo parseamos al direccion
+        printf("addr = %x\n", addr);
 
-        // todo parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, int *bloque)
+        
+        printf("addr =    %02X\n", addr);
+        printf("etq =     %d\n", etq);
+        printf("palabra = %d\n", palabra);
+        printf("linea =   %d\n", linea);
+        printf("bloque =  %d\n\n", bloque);
+
+        // todo movemos codigo a funcion parsear_direccion();
 
         // todo comprueba si etq actual es igual a simul_cache[linea].etq    
 
