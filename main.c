@@ -9,11 +9,6 @@
         Correspondencia Directa
 
         Bus de memoria: 12 bits 
-            +-------------+----------+------------+
-            |  0 0 1 0 0  |  0 1 0   |  1 1 1 0   |
-            +-------------+----------+------------+
-            | Etiqueta(5) | Linea(3) | Palabra(4) |
-            +-------------+----------+------------+
 
         Caché:  
             - tam_cache  = 128 (B)
@@ -21,7 +16,7 @@
             - num_lineas = 8
 
         RAM
-            - tam_ram     = 4096 (B)
+            - tasimul_ram = 4096 (B)
             - tam_bloque  = 16 (B)
             - num_bloques = 256
 */
@@ -32,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define TAM_LINEA 16
 #define NUM_FILAS 8
@@ -57,8 +53,7 @@ T_CACHE_LINE;
 // Funciones del programa
 void limpiar_cache(T_CACHE_LINE simul_cache[NUM_FILAS]);
 void parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, int *bloque);
-void tratar_fallo(T_CACHE_LINE *simul_cache, char *m_ram, 
-    int num_fallos, int addr, int etq, int linea, int palabra, int bloque);
+void tratar_fallo(T_CACHE_LINE *simul_cache, char *simul_ram, int etq, int linea, int bloque);
 void volcar_cache(T_CACHE_LINE *simul_cache);
     
 // Funciones auxiliares
@@ -79,13 +74,15 @@ int main(int argc, char *argv[])
 
     // Comprobamos que los archivos se han leído con éxito
     // Si la funcion devuelve 0, los archivos no se han leido bien
-    if(!comprobar_lectura_ficheros(fd_accesos_memoria, fd_contents_ram))
-        return EXIT_FAILURE;
+    // todo descomentar
+    // if(!comprobar_lectura_ficheros(fd_accesos_memoria, fd_contents_ram))
+    //     return EXIT_FAILURE;
 
     // Declaracion de variables
     T_CACHE_LINE simul_cache[NUM_FILAS] = {0};
     char simul_ram[4096];
     char texto[100];
+    int caracteres_leidos = 0;
     unsigned int addr = 0;
     int globaltime   = 0,
         num_fallos   = 0,
@@ -104,50 +101,78 @@ int main(int argc, char *argv[])
     while(fscanf(fd_accesos_memoria, "%x", &addr) == 1)
     {
         int etq     = 0,
-            palabra = 0,
             linea   = 0,
+            palabra = 0,
             bloque  = 0;
-            
-        // todo parseamos al direccion
-        printf("addr = %x\n", addr);
 
+        parsear_direccion(addr, &etq, &palabra, &linea, &bloque);
         
-        printf("addr =    %02X\n", addr);
-        printf("etq =     %d\n", etq);
+        // todo borrar
+        printf("--------------- DEBUG ---------------\n");
+        printf("addr    = %03X (Hex)\n", addr);
+        printf("etq     = %d\n", etq);
+        printf("linea   = %d\n", linea);
         printf("palabra = %d\n", palabra);
-        printf("linea =   %d\n", linea);
-        printf("bloque =  %d\n\n", bloque);
+        printf("bloque  = %d\n", bloque);
+        printf("-------------------------------------\n\n");
 
-        // todo movemos codigo a funcion parsear_direccion();
+        // Comprobamos si el bloque está mapeado en cache o no 
+        // Comparamos la etiqueta de la linea correspondeinte con la etiqueta de la direccion de memoria
+        // Si no esta mapeado, lo traemos de la RAM
+        if(simul_cache[linea].etq != etq)
+        {  
 
-        // todo comprueba si etq actual es igual a simul_cache[linea].etq    
+            ++num_fallos;
 
-            // todo Si no coincide:  
-                // todo ++num_fallos
-                // todo void tratar_fallo(*simul_cache, *m_ram, num_fallos, addr, etq, linea, palabra, int bloque)
-                // todo      
-                // todo globaltime += 20
+            printf(YELLOW"T: %d, Fallo de Cache: %d, ADDR: 0x%03X, Etq: %X, Linea: %02X, Palabra: %02X, Bloque: %02X\n"RESET,
+                globaltime, num_fallos, addr, etq, linea, palabra, bloque);
             
-            // todo si coincide:
-                // todo globaltime += T_HIT
-                // todo ++num_aciertos
-                // todo imprimimos:
-                // todo “T: %d, Acierto de CACHE, ADDR %04X, etq %X, linea %02X, palabra %02X, DATO %02X”. 
-                // todo Cada carácter leído se añade a la variable llamada texto
+            tratar_fallo(simul_cache, simul_ram, etq, linea, bloque);
+
+            globaltime += 20;
+        }   
+
+        // Leemos linea de la cache
+        globaltime++;
+        num_aciertos++;
+        printf("T: %d, Acierto de CACHE, ADDR %04X Label %X, linea %02X, palabra %02X, DATO %02X\n\n\n", 
+            globaltime, addr, etq, linea, palabra, bloque);
+
+        // Cada carácter leído se añade a la variable llamada texto
+        for(int i = 0; i < TAM_LINEA ; i++)
+        {
+            texto[caracteres_leidos] = simul_cache[linea].data[i];
+            caracteres_leidos++;
+        }
+        caracteres_leidos++;
+        texto[caracteres_leidos] = '\0';
     }
 
+    //  Volcamos el contenido de la cache
+    //  Los datos se imprimen de izquierda a derecha de mayor a menor peso. 
+    for(int i = 0; i < NUM_FILAS; i++)
+    {
+        printf("%X   Datos: ", simul_cache[i].etq);
+        for(int j = TAM_LINEA - 1; j >= 0; j--)
+        {
+            printf("%X ", simul_cache[i].data[j]);
+        }
+        printf("\n\n");
+    }
+    
+    // sleep() de 1 segundo.
+    // todo descomentar
+    // todo sleep(1);
 
-
-    // todo Volcamos el contenido de la cache
-    // todo Los datos se imprimen de izquierda a derecha de mayor a menor peso. 
-
-    // todo sleep() de 1 segundo.
-
-    // todo t_access = globaltime / (num_aciertos + num_fallos)
-
-    // todo imprimimos num_aciertos, num_fallos, t_access
+    // Imprimimos num_aciertos, num_fallos, t_access
+    t_access = globaltime / (num_aciertos + num_fallos);
+    printf(
+        "Numero total de accesos = %d\n" 
+        "Numero total de fallos  = %d\n"
+        "Tiempo medio de acceso  = %d", num_aciertos, num_fallos, t_access);
 
     // todo imprimimos el texto leído carácter a carácter desde simul_cache[].data
+
 
     // todo VolcarCACHE(T_CACHE_LINE *simul_cache); 
 
@@ -190,14 +215,31 @@ void limpiar_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
  */
 void parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, int *bloque)
 {
-    // todo Obtiene la etiqueta, palabra, linea y bloque de la direccion
+    // +-------------+----------+------------+
+    // |  0 0 1 0 0  |  0 1 0   |  1 1 1 0   |
+    // +-------------+----------+------------+
+    // | Etiqueta(5) | Linea(3) | Palabra(4) |
+    // +-------------+----------+------------+
+
+    // Desplazamos 7 bits de la direccion de memoria a la derecha. Obtenemos la etiqueta
+    *etq = addr >> 7;
+
+    // Desplazamos 4 bits a la derecha para la Linea. 
+    // Aplicamos mascara y nos quedamos con los 3 bits de la derecha
+    *linea = (addr >> 4) & 7;
+
+    // Aplicamos mascara y nos quedamos con los 5 bits de la derecha
+    *palabra = addr & 15;
+
+    // Desplazamos 4 bits a la derecha.    
+    *bloque = addr >> 4;
 }
 
 /**
  * @brief 
  * 
- * @param[in,out] simul_cache   Simulador cache. Contiene las lineas  
- * @param[in,out] m_ram         Simulador RAM. Contiene los bloques        
+ * @param[out] simul_cache   Simulador cache. Contiene las lineas  
+ * @param[in] simul_ram     Simulador RAM. Contiene los bloques        
  * @param[in] num_fallos 
  * @param[in] addr              
  * @param[in] etq       
@@ -205,31 +247,40 @@ void parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, in
  * @param[in] palabra     
  * @param[in] bloque       
  */
-void tratar_fallo(T_CACHE_LINE *simul_cache, char *m_ram, 
-    int num_fallos, int addr, int etq, int linea, int palabra, int bloque)
+void tratar_fallo(T_CACHE_LINE *simul_cache, char *simul_ram, int etq, int linea, int bloque)
 {
-    // todo imprimimos: 
-        // todo “T: %d, Fallo de CACHE %d, ADDR %04X, etq %X, linea %02X, palabra %02X, bloque %02X”. 
+    printf("Cargando el bloque %X en la linea %02X\n", bloque, linea);
 
-        // todo T: %d               Instante del fallo  globaltime
-        // todo Fallo de CACHE %d   Contador de fallos  num_fallos   
-        // todo ADDR %04X           Direccion Actual    ADDR
-        // todo etq %X              Etiqueta            etq
-        // todo linea %02X          Linea               linea
-        // todo palabra %02X        Palabra             palabra
-        // todo bloque %02X         Bloque              bloque
+    // Se traen los 16 bytes de datos del bloque a la línea
+    for(int i = 0; i < TAM_LINEA; i++)
+    {
+        simul_cache[linea].data[i] = simul_ram[bloque];
+        bloque++;
+    } 
 
-    // todo Se copia el bloque desde m_ram a simul_cache[linea].data
+    printf("DEBUG %c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n", 
+         simul_cache[linea].data[0]
+        ,simul_cache[linea].data[1]
+        ,simul_cache[linea].data[2]
+        ,simul_cache[linea].data[3]
+        ,simul_cache[linea].data[4]
+        ,simul_cache[linea].data[5]
+        ,simul_cache[linea].data[6]
+        ,simul_cache[linea].data[7]
+        ,simul_cache[linea].data[8]
+        ,simul_cache[linea].data[9]
+        ,simul_cache[linea].data[10]
+        ,simul_cache[linea].data[11]
+        ,simul_cache[linea].data[12]
+        ,simul_cache[linea].data[13]
+        ,simul_cache[linea].data[14]
+        ,simul_cache[linea].data[15]
+    );
 
-    // todo se imprime un mensaje indicando que se está cargando el bloque X en la línea Y
-
-    // todo Se actualiza el campo etiqueta de la caché simul_cache[linea].etq = etq
-
-    // todo Se traen los 16 bytes de datos del bloque a la línea
-        // todo for(int i = 0; i < TAM_LINEA; i++)
-        // todo {
-        // todo     simul_cache[linea].data[i] = m_ram[i]
-        // todo } 
+    // Se actualiza el campo etiqueta de la caché simul_cache[linea].etq = etq
+    simul_cache[linea].etq = etq;    
+    
+    printf(GREEN"Bloque mapeado en la cache!\n"RESET);
 }
 
 /**
