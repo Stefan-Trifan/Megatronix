@@ -186,18 +186,26 @@ int main(int argc, char *argv[])
         }
     }
 
-    // todo VolcarCACHE(T_CACHE_LINE *simul_cache); 
-    // El programa volcara los contenidos de los 128 bytes de informacion (8 lineas de 16 bytes cada una) de la cache 
-    // en un fichero binario llamado CONTENTS_CACHE.bin. 
-    // El byte 0 de ese fichero es el byte 0 de la linea 0 de la cache y el byte 128, es el byte 15 de la linea 15.
+
+
+
+
+
+
+    // Creamos un archivo binario llamado CONTENTS_CACHE.bin
     FILE *fd_contents_cache = fopen("CONTENTS_CACHE.bin", "wb");
 
-    // todo esto esta mal, pero se hace con fwrite
-
+    // todo Volcamos los contenidos de los 128 bytes de informacion (8 lineas de 16 bytes cada una) 
+    // todo de la cache  en en CONTENTS_CACHE.bin. 
+    // todo El byte 0 de ese fichero es el byte 0 de la linea 0 de la cache 
+    // todo El byte 128, es el byte 15 de la linea 15.
+    // esto esta mal, pero se hace con fwrite
     // for(int i = 0; i < NUM_FILAS; i++)
     // {
     //     fwrite(simul_cache[i].data, TAM_LINEA, TAM_LINEA * NUM_FILAS, fd_contents_cache);
     // }
+
+    // todo fin volcar_cache()
 
     // todo Cerramos los ficheros y los fd
 
@@ -314,11 +322,7 @@ void tratar_fallo(T_CACHE_LINE *simul_cache, char *simul_ram, int etq, int linea
  */
 void volcar_cache(T_CACHE_LINE *simul_cache)
 {
-    // todo Creamos un archivo binario llamado CONTENTS_CACHE.bin
-
-    // todo Volcamos los contenidos de los 128 bytes de informacion de la cache en CONTENTS_CACHE.bin
-        // todo El byte 0 del fichero es el byte 0 de la linea 0 de la cache 
-        // todo El byte 128, es el byte 15 de la linea 15.
+   
 }
 
 // Funciones auxiliares
