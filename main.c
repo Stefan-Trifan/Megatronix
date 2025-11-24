@@ -169,10 +169,23 @@ int main(int argc, char *argv[])
     printf(
         "Numero total de accesos = %d\n" 
         "Numero total de fallos  = %d\n"
-        "Tiempo medio de acceso  = %d", num_aciertos, num_fallos, t_access);
+        "Tiempo medio de acceso  = %d\n\n", num_aciertos, num_fallos, t_access);
 
-    // todo imprimimos el texto leído carácter a carácter desde simul_cache[].data
-
+    // Imprimimos el texto leído carácter a carácter desde cache
+    // Recorremos fila por fila la cache
+    for(int i = 0; i < NUM_FILAS; i++)
+    {
+        // Si el primer byte de la palabra es distinto de 23 en hex, 
+        // significa que hay bloque mapeado en esa fila
+        if(simul_cache[i].data[0] != 0x23)
+        {
+            // Imprimimos caracter a caracter el texto leído en una fila
+            for(int j = 0; j < TAM_LINEA; j++)
+            {
+                printf("%c", simul_cache[i].data[j]);
+            }   
+        }
+    }
 
     // todo VolcarCACHE(T_CACHE_LINE *simul_cache); 
 
