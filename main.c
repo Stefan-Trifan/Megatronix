@@ -174,8 +174,8 @@ int main(int argc, char *argv[])
     // Recorremos fila por fila la cache
     for(int i = 0; i < NUM_FILAS; i++)
     {
-        // Si el primer byte de la palabra es distinto de 23 en hex, 
-        // significa que hay bloque mapeado en esa fila
+        // Si el primer byte de la linea es distinto de '#', 
+        // significa que hay bloque mapeado en esa fila y lo imprimimos
         if(simul_cache[i].data[0] != 0x23)
         {
             // Imprimimos caracter a caracter el texto leido en una fila
@@ -186,28 +186,11 @@ int main(int argc, char *argv[])
         }
     }
 
+    volcar_cache(simul_cache);
 
-
-
-
-
-
-    // Creamos un archivo binario llamado CONTENTS_CACHE.bin
-    FILE *fd_contents_cache = fopen("CONTENTS_CACHE.bin", "wb");
-
-    // todo Volcamos los contenidos de los 128 bytes de informacion (8 lineas de 16 bytes cada una) 
-    // todo de la cache  en en CONTENTS_CACHE.bin. 
-    // todo El byte 0 de ese fichero es el byte 0 de la linea 0 de la cache 
-    // todo El byte 128, es el byte 15 de la linea 15.
-    // esto esta mal, pero se hace con fwrite
-    // for(int i = 0; i < NUM_FILAS; i++)
-    // {
-    //     fwrite(simul_cache[i].data, TAM_LINEA, TAM_LINEA * NUM_FILAS, fd_contents_cache);
-    // }
-
-    // todo fin volcar_cache()
-
-    // todo Cerramos los ficheros y los fd
+    // Cerramos los file descriptor
+    fclose(fd_accesos_memoria);
+    fclose(fd_contents_ram);
 
     printf("\n_________________________________________EXIT\n\n");
     return EXIT_SUCCESS;
@@ -322,7 +305,19 @@ void tratar_fallo(T_CACHE_LINE *simul_cache, char *simul_ram, int etq, int linea
  */
 void volcar_cache(T_CACHE_LINE *simul_cache)
 {
-   
+    // Creamos un archivo binario llamado CONTENTS_CACHE.bin
+    FILE *fd_contents_cache = fopen("CONTENTS_CACHE.bin", "wb");
+
+    // Volcamos los contenidos de los 128 bytes de informacion (8 lineas de 16 bytes cada una) 
+    // de la cache  en en CONTENTS_CACHE.bin. 
+    // El byte 0 de ese fichero es el byte 0 de la linea 0 de la cache 
+    // El byte 128, es el byte 15 de la linea 15.
+    for(int i = 0; i < NUM_FILAS; i++)
+    {
+        fwrite(simul_cache[i].data, 1, TAM_LINEA, fd_contents_cache);
+    } 
+
+    fclose(fd_contents_cache);
 }
 
 // Funciones auxiliares
