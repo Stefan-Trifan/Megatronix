@@ -45,8 +45,8 @@
 // Linea de cache
 typedef struct 
 {
-    unsigned char etq; // Guarda el valor decimal de la etiqueta
-    unsigned char data[TAM_LINEA]; // Guarda las 16 Bytes/palabras
+    unsigned char etq; // Guarda el valor de la etiqueta
+    unsigned char data[TAM_LINEA]; // Guarda 16 Bytes/palabras
 } 
 T_CACHE_LINE;
 
@@ -113,7 +113,6 @@ int main(int argc, char *argv[])
         // Si no esta mapeado, lo traemos de la RAM
         if(simul_cache[linea].etq != etq)
         {  
-
             ++num_fallos;
 
             printf(YELLOW"T: %d, Fallo de CACHE: %d, ADDR: 0x%03X, Etq: %X, Linea: %02X, Palabra: %02X, Bloque: %02X\n"RESET,
@@ -142,12 +141,13 @@ int main(int argc, char *argv[])
 
     //  Volcamos el contenido de la cache
     //  Los datos se imprimen de izquierda a derecha de mayor a menor peso. 
+    printf("--- Contenido volcado de la CACHE ---\n\n");
     for(int i = 0; i < NUM_FILAS; i++)
     {
         printf("%02X   Datos: ", simul_cache[i].etq);
         for(int j = TAM_LINEA - 1; j >= 0; j--)
         {
-            printf("%X ", simul_cache[i].data[j]);
+            printf("%02X ", simul_cache[i].data[j]);
         }
         printf("\n\n");
     }
@@ -158,13 +158,14 @@ int main(int argc, char *argv[])
     // Imprimimos num_aciertos, num_fallos, t_access
     t_access = globaltime / (num_aciertos + num_fallos);
     printf(
+        "--- Stats CACHE ---\n\n"
         "Numero total de accesos = %d\n" 
         "Numero total de fallos  = %d\n"
         "Tiempo medio de acceso  = %d\n\n", num_aciertos, num_fallos, t_access);
 
     // Imprimimos el texto leido caracter a caracter desde cache
     // Recorremos fila por fila la cache
-    printf("Contenidos cache:\n");
+    printf("--- Caracteres almacenados en CACHE ---\n\n");
     for(int i = 0; i < NUM_FILAS; i++)
     {
         // Si el primer byte de la linea es distinto de '#', 
