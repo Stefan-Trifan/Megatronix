@@ -132,6 +132,7 @@ int main(int argc, char *argv[])
         }
         
         // Leemos linea de la cache. Cada caracter leido se añade a la variable llamada texto
+        // todo
         for(int i = 0; i < TAM_LINEA ; i++)
         {
             texto[caracteres_leidos] = simul_cache[linea].data[i];
