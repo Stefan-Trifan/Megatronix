@@ -31,7 +31,7 @@
 
 #define TAM_LINEA 16  // Bytes por linea de CACHE
 #define NUM_FILAS 8   // Numero de filas en la CACHE
-#define TAM_RAM 4096  // Tamaño total de RAM en Bytes
+#define TAM_RAM 4096  // Tamaño de RAM en Bytes
 #define T_MISS 20     // Penalizacion por fallo en la CACHE
 #define T_HIT 1       // Tiempo de acierto en la CACHE
 #define TAM_TEXTO 100 // Numero de caracteres que se pueden leer desde la CACHE
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     limpiar_cache(simul_cache);    
 
     // Volcamos el contenido de de CONTENTS_RAM.bin en simul_ram (Nuestra RAM virtual) 
-    fread(simul_ram, 1, 4096, fd_contents_ram);
+    fread(simul_ram, 1, TAM_RAM, fd_contents_ram);
 
     // Leemos direcciones de memoria de una en una, hasta que se acaben
     // y vas vamos guardando en addr
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
             globaltime, addr, etq, linea, palabra, bloque);
         }
         
-        // Leemos linea de la cache. Cada caracter leido se añade a la variable llamada texto
+        // Cada caracter leido se añade a la variable llamada texto
         texto[caracteres_leidos] = simul_cache[linea].data[palabra];
         texto[++caracteres_leidos] = '\0';
     }
@@ -263,7 +263,7 @@ void volcar_cache(T_CACHE_LINE *simul_cache)
     // Volcamos los contenidos de los 128 bytes de informacion (8 lineas de 16 bytes cada una) 
     // de la cache  en en CONTENTS_CACHE.bin. 
     // El byte 0 de ese fichero es el byte 0 de la linea 0 de la cache 
-    // El byte 128, es el byte 15 de la linea 15.
+    // El byte 128, es el byte 15 de la linea 8.
     for(int i = 0; i < NUM_FILAS; i++)
     {
         fwrite(simul_cache[i].data, 1, TAM_LINEA, fd_contents_cache);
@@ -273,7 +273,10 @@ void volcar_cache(T_CACHE_LINE *simul_cache)
 }
 
 // * Funciones auxiliares
-
+/**
+ * @return 1: Si Ha leído bien los archivos
+ *         0: No ha podido encontrar los archivos
+ */
 int comprobar_lectura_ficheros(FILE *fd_accesos_memoria, FILE *fd_contents_ram)
 {
     // Comprueba que existen los ficheros "accesos_memoria.txt" y "CONTENTS_RAM.bin"
@@ -305,11 +308,12 @@ int comprobar_lectura_ficheros(FILE *fd_accesos_memoria, FILE *fd_contents_ram)
 void imprimir_contenido_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
 {
     // Imprime en hexadecimal los datos almacenados en CACHE
-    // Los datos se imprimen de izquierda a derecha de mayor a menor peso. 
     printf("--- Contenido volcado de la CACHE ---\n\n");
     for(int i = 0; i < NUM_FILAS; i++)
     {
         printf("[ %02X   Datos: ", simul_cache[i].etq);
+        // Los datos se imprimen de izquierda a derecha de mayor a menor peso. 
+        // El byte situado más a la izquierda es el byte 15 de la línea y el situado a la derecha el byte 0.
         for(int j = TAM_LINEA - 1; j >= 0; j--)
         {
             printf("%02X ", simul_cache[i].data[j]);
