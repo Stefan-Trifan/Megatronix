@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
         num_fallos        = 0,
         num_aciertos      = 0, 
         t_access          = 0, // Tiempo medio de acceso a la CACHE
-        caracteres_leidos = 0; // Numero de caracteres leídos desde la cache
+        caracteres_leidos = 0; // Numero de caracteres leidos desde la cache
     unsigned int addr = 0;
 
     // Inicializamos los valores de la cache con valores por defecto
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
         "Tiempo medio    = %d\n\n", num_aciertos + num_fallos, num_fallos, t_access);
 
     // Imprimimos el texto leido caracter a caracter desde cache
-    printf("--- Texto leído ---\n\n");
+    printf("--- Texto leido ---\n\n");
     printf("%s", texto);
     
     // Volcamos el contenido de la cache en CONTENTS_CACHE.bin
@@ -221,7 +221,7 @@ void parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, in
 }
 
 /**
- * @brief Carga en la línea correspondiente el bloque desde la RAM
+ * @brief Carga en la linea correspondiente el bloque desde la RAM
  *        Actualiza la etiqueta en la CACHE
  * 
  * @param[out] simul_cache Simulador cache. Contiene las lineas  
@@ -274,7 +274,7 @@ void volcar_cache(T_CACHE_LINE *simul_cache)
 
 // * Funciones auxiliares
 /**
- * @return 1: Si Ha leído bien los archivos
+ * @return 1: Si Ha leido bien los archivos
  *         0: No ha podido encontrar los archivos
  */
 int comprobar_lectura_ficheros(FILE *fd_accesos_memoria, FILE *fd_contents_ram)
@@ -313,7 +313,7 @@ void imprimir_contenido_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
     {
         printf("[ %02X   Datos: ", simul_cache[i].etq);
         // Los datos se imprimen de izquierda a derecha de mayor a menor peso. 
-        // El byte situado más a la izquierda es el byte 15 de la línea y el situado a la derecha el byte 0.
+        // El byte situado más a la izquierda es el byte 15 de la linea y el situado a la derecha el byte 0.
         for(int j = TAM_LINEA - 1; j >= 0; j--)
         {
             printf("%02X ", simul_cache[i].data[j]);
