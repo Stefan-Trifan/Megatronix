@@ -62,7 +62,6 @@ void volcar_cache(T_CACHE_LINE *simul_cache);
 int comprobar_lectura_ficheros(FILE *fd_accesos_memoria, FILE *fd_contents_ram);
 void imprimir_contenido_cache(T_CACHE_LINE simul_cache[NUM_FILAS]);
 void imprimir_caracteres_cache(T_CACHE_LINE simul_cache[NUM_FILAS]);
-void clearBuffer();
 
 /* _________________________________________
    Inicio main() */
@@ -114,23 +113,25 @@ int main(int argc, char *argv[])
 
         // Comprobamos si el bloque esta mapeado en cache o no 
         // Comparamos la etiqueta de la direccion de memoria con la etiqueta de la linea correspondeinte  
-        // Si no esta mapeado, lo traemos de la RAM
         if(simul_cache[linea].etq != etq)
         {  
-            ++num_fallos;
-
+             // Si no esta mapeado, lo traemos de la RAM
+            num_fallos++;
             printf(YELLOW"T: %d, Fallo de CACHE: %d, ADDR: 0x%03X, Etq: %X, Linea: %02X, Palabra: %02X, Bloque: %02X\n"RESET,
                 globaltime, num_fallos, addr, etq, linea, palabra, bloque);
-            
             tratar_fallo(simul_cache, simul_ram, etq, linea, bloque);
-
             globaltime += 20;
         }   
-
-        // Leemos linea de la cache
-        globaltime++;
-        num_aciertos++;
-        // Cada caracter leido se añade a la variable llamada texto
+        else
+        {
+             // Si ya estaba mapeado desde antes, imprimimos el acierto
+            globaltime++;
+            num_aciertos++;
+            printf(GREEN"T: %d, Acierto de CACHE, ADDR 0x%03X, Etq: %X, Linea: %02X, Palabra: %02X, Bloque: %02X\n\n\n"RESET, 
+            globaltime, addr, etq, linea, palabra, bloque);
+        }
+        
+        // Leemos linea de la cache. Cada caracter leido se añade a la variable llamada texto
         for(int i = 0; i < TAM_LINEA ; i++)
         {
             texto[caracteres_leidos] = simul_cache[linea].data[i];
@@ -138,26 +139,27 @@ int main(int argc, char *argv[])
         }
         caracteres_leidos++;
         texto[caracteres_leidos] = '\0';
-        printf(GREEN"T: %d, Acierto de CACHE, ADDR 0x%03X, Etq: %X, Linea: %02X, Palabra: %02X, Bloque: %02X\n\n\n"RESET, 
-            globaltime, addr, etq, linea, palabra, bloque);
     }
 
     //  Imprimimos por pantalla en hexadecimal el contenido de la cache
     imprimir_contenido_cache(simul_cache);
     
     // sleep() de 1 segundo.
-    sleep(1);
+    // sleep(1);
 
     // Imprimimos numero de aciertos, numero de fallos y tiempo de acceso
     t_access = globaltime / (num_aciertos + num_fallos);
     printf(
         "--- Stats CACHE ---\n\n"
-        "Numero total de accesos = %d\n" 
-        "Numero total de fallos  = %d\n"
-        "Tiempo medio de acceso  = %d\n\n", num_aciertos, num_fallos, t_access);
+        "Accesos totales = %d\n" 
+        "Fallos          = %d\n"
+        "Tiempo medio    = %d\n\n", num_aciertos + num_fallos, num_fallos, t_access);
 
     // Imprimimos el texto leido caracter a caracter desde cache
     imprimir_caracteres_cache(simul_cache);
+
+    // TODO 
+    printf("\n\n%s\n", texto);
 
     // Volcamos el contenido de la cache en CONTENTS_CACHE.bin
     volcar_cache(simul_cache);
@@ -219,7 +221,7 @@ void parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, in
     // Aplicamos mascara y nos quedamos con los 3 bits de la derecha
     *linea = (addr >> 4) & 7;
 
-    // Aplicamos mascara y nos quedamos con los 5 bits de la derecha
+    // Aplicamos mascara y nos quedamos con los 4 bits de la derecha
     *palabra = addr & 15;
 
     // Desplazamos 4 bits a la derecha.    
@@ -253,7 +255,7 @@ void tratar_fallo(T_CACHE_LINE *simul_cache, char *simul_ram, int etq, int linea
     // Se actualiza el campo etiqueta de la cache simul_cache[linea].etq = etq
     simul_cache[linea].etq = etq;    
     
-    printf("Bloque mapeado en la cache!\n"); 
+    printf("Bloque mapeado en la cache!\n\n\n"); 
 }
 
 /**
@@ -328,7 +330,7 @@ void imprimir_caracteres_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
 {
     // Imprime los caracteres almacenados en CACHE
     // Recorremos fila por fila la cache
-    printf("--- Caracteres almacenados en CACHE ---\n\n");
+    printf("--- Texto leído ---\n\n");
     for(int i = 0; i < NUM_FILAS; i++)
     {
         // Si el primer byte de la linea es distinto de '#', 
