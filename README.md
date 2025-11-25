@@ -30,7 +30,7 @@ Se repetirá el siguiente protocolo:
 
 - `MEMsym` lee una dirección del fichero `accesos_memoria.txt`.
 - Obtiene el número de línea y comprueba si la etiqueta de la dirección es igual a `Label` de la línea de la caché.
-- Si no es así, incrementa el valor de numfallos y escribe una línea con el texto `“T: %d, Fallo de CACHE %d, ADDR %04X Label %X linea %02X palabra %02X bloque %02X”`, siendo `T` el instante. Se incrementa en `20` el contador `globaltime`. Se copia el bloque correspondiente desde el array RAM y se imprime un mensaje indicando que se está cargando el `bloque X` en la `línea Y`. Se actualizan tanto el campo `Label` como los `8` bytes de datos de la línea.
+- Si no es así, incrementa el valor de numfallos y escribe una línea con el texto `“T: %d, Fallo de CACHE %d, ADDR %04X Label %X linea %02X palabra %02X bloque %02X”`, siendo `T` el instante. Se incrementa en `20` el contador `globaltime`. Se copia el bloque correspondiente desde el array RAM y se imprime un mensaje indicando que se está cargando el `bloque X` en la `línea Y`. Se actualizan tanto el campo `Label` como los `16` bytes de datos de la línea.
 - Por pantalla se escribe `“T: %d, Acierto de CACHE, ADDR %04X Label %X linea %02X palabra %02X DATO %02X”`. Cada carácter leído se añade a una variable llamada texto, que es un array de `100` caracteres como máximo (no hace falta usar memoria dinámica).
 - El proceso vuelca el contenido de la caché por pantalla con el siguiente formato: Los datos se imprimen de izquierda a derecha de mayor a menor peso. Esto significa que el byte situado más a la izquierda es el byte 15 de la línea y el situado a la derecha el byte `0`.
 - EL proceso hace un `sleep()` de `1` segundo.
@@ -39,7 +39,7 @@ Al final se imprimirá un mensaje con el número total de accesos, número de fa
 
 Debajo, otro mensaje con el texto leído carácter a carácter desde la caché.
 
-Antes de salir, el programa volcará los contenidos de los 128 bytes de información (8 líneas de 16 bytes cada una) de la caché en un fichero binario llamado `CONTENTS_CACHE.bin`. El byte `0` de ese fichero es el byte `0` de la línea `0` de la caché y el byte `128`, es el byte `15` de la línea `8`.
+Antes de salir, el programa volcará los contenidos de los 128 bytes de información (`8` líneas de `16` bytes cada una) de la caché en un fichero binario llamado `CONTENTS_CACHE.bin`. El byte `0` de ese fichero es el byte `0` de la línea `0` de la caché y el byte `128`, es el byte `15` de la línea `8`.
 
 ---
 
