@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
         {  
              // Si no esta mapeado, lo traemos de la RAM
             num_fallos++;
-            printf(YELLOW"T: %d, Fallo de CACHE: %d, ADDR: 0x%03X, Etq: %X, Linea: %02X, Palabra: %02X, Bloque: %02X\n"RESET,
+            printf(YELLOW"T: %d, Fallo de CACHE: %d, ADDR: 0x%03X, Etq: %02X, Linea: %01X, Palabra: %01X, Bloque: %02X\n"RESET,
                 globaltime, num_fallos, addr, etq, linea, palabra, bloque);
             tratar_fallo(simul_cache, simul_ram, etq, linea, bloque);
             globaltime += 20;
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
              // Si ya estaba mapeado desde antes, imprimimos el acierto
             globaltime++;
             num_aciertos++;
-            printf(GREEN"T: %d, Acierto de CACHE, ADDR 0x%03X, Etq: %X, Linea: %02X, Palabra: %02X, Bloque: %02X\n\n\n"RESET, 
+            printf(GREEN"T: %d, Acierto de CACHE, ADDR 0x%03X, Etq: %02X, Linea: %01X, Palabra: %01X, Bloque: %02X\n\n\n"RESET, 
             globaltime, addr, etq, linea, palabra, bloque);
         }
         
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
     imprimir_contenido_cache(simul_cache);
     
     // sleep() de 1 segundo.
-    // sleep(1);
+    sleep(1);
 
     // Imprimimos numero de aciertos, numero de fallos y tiempo de acceso
     t_access = globaltime / (num_aciertos + num_fallos);
@@ -224,8 +224,8 @@ void parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, in
  * @brief Carga en la línea correspondiente el bloque desde la RAM
  *        Actualiza la etiqueta en la CACHE
  * 
- * @param[out] simul_cache   Simulador cache. Contiene las lineas  
- * @param[in] simul_ram     Simulador RAM. Contiene los bloques        
+ * @param[out] simul_cache Simulador cache. Contiene las lineas  
+ * @param[in] simul_ram    Simulador RAM. Contiene los bloques        
  * @param[in] num_fallos 
  * @param[in] addr              
  * @param[in] etq       
@@ -247,7 +247,7 @@ void tratar_fallo(T_CACHE_LINE *simul_cache, char *simul_ram, int etq, int linea
     // Se actualiza el campo etiqueta de la cache simul_cache[linea].etq = etq
     simul_cache[linea].etq = etq;    
     
-    printf("Bloque mapeado en la cache!\n\n\n"); 
+    printf("Bloque cargado en la cache!\n\n\n"); 
 }
 
 /**
@@ -309,36 +309,14 @@ void imprimir_contenido_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
     printf("--- Contenido volcado de la CACHE ---\n\n");
     for(int i = 0; i < NUM_FILAS; i++)
     {
-        printf("%02X   Datos: ", simul_cache[i].etq);
+        printf("[ %02X   Datos: ", simul_cache[i].etq);
         for(int j = TAM_LINEA - 1; j >= 0; j--)
         {
             printf("%02X ", simul_cache[i].data[j]);
         }
-        printf("\n\n");
+        printf("]\n\n");
     }
 }
-
-// todo borrar esta funcion, no es necesaria
-// void imprimir_caracteres_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
-// {
-//     // Imprime los caracteres almacenados en CACHE
-//     // Recorremos fila por fila la cache
-//     printf("--- Texto leído ---\n\n");
-//     for(int i = 0; i < NUM_FILAS; i++)
-//     {
-//         // Si el primer byte de la linea es distinto de '#', 
-//         // significa que hay bloque mapeado en esa fila y lo imprimimos
-//         if(simul_cache[i].data[0] != 0x23)
-//         {
-//             // Imprimimos caracter a caracter el texto leido en una fila
-//             for(int j = 0; j < TAM_LINEA; j++)
-//             {
-//                 printf("%c", simul_cache[i].data[j]);
-//             }   
-//         }
-//     }
-//     printf("\n");
-// }
 
 // Comentarios DEBUG 
 
