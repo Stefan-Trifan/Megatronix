@@ -25,9 +25,8 @@
    Inicio cabecera */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include <stdlib.h>  
+#include <unistd.h> 
 
 #define TAM_LINEA 16  // Bytes por linea de CACHE
 #define NUM_FILAS 8   // Numero de filas en la CACHE
