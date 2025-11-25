@@ -5,20 +5,20 @@
     *   Nombre del Proyecto
         Megatronix
 
-    *   Configuracion del Proyecto
+    *   Especificaciones del Sistema
         Correspondencia Directa
 
         Bus de memoria: 12 bits 
 
         Cache:  
-            - tam_cache  = 128 (B)
-            - tam_linea  = 16 (B)
-            - num_lineas = 8
+            - Tamaño           = 128 (B)
+            - Tamaño linea     = 16 (B)
+            - Numero de lineas = 8
 
         RAM
-            - tasimul_ram = 4096 (B)
-            - tam_bloque  = 16 (B)
-            - num_bloques = 256
+            - Tamaño            = 4096 (B)
+            - Tamaño bloque     = 16 (B)
+            - Numero de bloques = 256
 */
 
 /* _________________________________________
@@ -29,10 +29,12 @@
 #include <string.h>
 #include <unistd.h>
 
-#define TAM_LINEA 16 // Bytes por linea
-#define NUM_FILAS 8
-#define T_MISS 20
-#define T_HIT 1
+#define TAM_LINEA 16  // Bytes por linea de CACHE
+#define NUM_FILAS 8   // Numero de filas en la CACHE
+#define TAM_RAM 4096  // Tamaño total de RAM en Bytes
+#define T_MISS 20     // Penalizacion por fallo en la CACHE
+#define T_HIT 1       // Tiempo de acierto en la CACHE
+#define TAM_TEXTO 100 // Numero de caracteres que se pueden leer desde la CACHE
 
 #define RED "\033[1;31m"
 #define GREEN "\033[1;32m"
@@ -42,11 +44,11 @@
 #define FILE_ACCESOS_MEMORIA "./accesos_memoria.txt"
 #define FILE_CONTENTS_RAM "./CONTENTS_RAM.bin"
 
-// Linea de cache
+// Estructura para linea de cache
 typedef struct 
 {
-    unsigned char etq; // Guarda el valor de la etiqueta
-    unsigned char data[TAM_LINEA]; // Guarda 16 Bytes/palabras
+    unsigned char etq;             // Guarda el valor de la etiqueta
+    unsigned char data[TAM_LINEA]; // Guarda [TAM_LINEA] Bytes (palabras)
 } 
 T_CACHE_LINE;
 
@@ -58,7 +60,8 @@ void volcar_cache(T_CACHE_LINE *simul_cache);
     
 // Funciones auxiliares
 int comprobar_lectura_ficheros(FILE *fd_accesos_memoria, FILE *fd_contents_ram);
-void imprimir_cache(T_CACHE_LINE simul_cache[NUM_FILAS]);
+void imprimir_contenido_cache(T_CACHE_LINE simul_cache[NUM_FILAS]);
+void imprimir_caracteres_cache(T_CACHE_LINE simul_cache[NUM_FILAS]);
 void clearBuffer();
 
 /* _________________________________________
@@ -68,7 +71,7 @@ int main(int argc, char *argv[])
 {
     printf("\n_________________________________________START\n\n");
 
-    // Leemos los archivos
+    // Abrimos los archivos
     FILE *fd_accesos_memoria = fopen(FILE_ACCESOS_MEMORIA, "r");
     FILE *fd_contents_ram    = fopen(FILE_CONTENTS_RAM, "rb");
 
@@ -79,20 +82,20 @@ int main(int argc, char *argv[])
 
     // Declaracion de variables
     T_CACHE_LINE simul_cache[NUM_FILAS] = {0};
-    char simul_ram[4096]; // 4096
-    char texto[100];
-    int caracteres_leidos = 0;
+    char simul_ram[TAM_RAM]; 
+    char texto[TAM_TEXTO];
     unsigned int addr = 0;
-    int globaltime   = 0,
-        num_fallos   = 0,
-        num_aciertos = 0,
-        t_access     = 0;
+    int globaltime        = 0, // Tiempo total de acceso a la CACHE
+        num_fallos        = 0,
+        num_aciertos      = 0, 
+        t_access          = 0, // Tiempo medio de acceso a la CACHE
+        caracteres_leidos = 0; // Numero de caracteres leídos desde la cache
 
     // Inicializamos los valores de la cache con valores por defecto
     limpiar_cache(simul_cache);    
 
     // Volcamos el contenido de de CONTENTS_RAM.bin en simul_ram (Nuestra RAM virtual) 
-    fread(simul_ram ,1 , 4096, fd_contents_ram);
+    fread(simul_ram, 1, 4096, fd_contents_ram);
 
     // Leemos direcciones de memoria de una en una, hasta que se acaben
     // y vas vamos guardando en addr
@@ -103,13 +106,14 @@ int main(int argc, char *argv[])
             linea   = 0,
             palabra = 0,
             bloque  = 0;
-
-        parsear_direccion(addr, &etq, &palabra, &linea, &bloque);
         
         printf("-> 0x%03X\n", addr);
 
+        // Descomponemos la direccion en etiqueta, palabra, linea y bloque
+        parsear_direccion(addr, &etq, &palabra, &linea, &bloque);
+
         // Comprobamos si el bloque esta mapeado en cache o no 
-        // Comparamos la etiqueta de la linea correspondeinte con la etiqueta de la direccion de memoria
+        // Comparamos la etiqueta de la direccion de memoria con la etiqueta de la linea correspondeinte  
         // Si no esta mapeado, lo traemos de la RAM
         if(simul_cache[linea].etq != etq)
         {  
@@ -126,9 +130,6 @@ int main(int argc, char *argv[])
         // Leemos linea de la cache
         globaltime++;
         num_aciertos++;
-        printf(GREEN"T: %d, Acierto de CACHE, ADDR %04X Label %X, linea %02X, palabra %02X, DATO %02X\n\n\n"RESET, 
-            globaltime, addr, etq, linea, palabra, bloque);
-
         // Cada caracter leido se añade a la variable llamada texto
         for(int i = 0; i < TAM_LINEA ; i++)
         {
@@ -137,25 +138,17 @@ int main(int argc, char *argv[])
         }
         caracteres_leidos++;
         texto[caracteres_leidos] = '\0';
+        printf(GREEN"T: %d, Acierto de CACHE, ADDR 0x%03X, Etq: %X, Linea: %02X, Palabra: %02X, Bloque: %02X\n\n\n"RESET, 
+            globaltime, addr, etq, linea, palabra, bloque);
     }
 
-    //  Volcamos el contenido de la cache
-    //  Los datos se imprimen de izquierda a derecha de mayor a menor peso. 
-    printf("--- Contenido volcado de la CACHE ---\n\n");
-    for(int i = 0; i < NUM_FILAS; i++)
-    {
-        printf("%02X   Datos: ", simul_cache[i].etq);
-        for(int j = TAM_LINEA - 1; j >= 0; j--)
-        {
-            printf("%02X ", simul_cache[i].data[j]);
-        }
-        printf("\n\n");
-    }
+    //  Imprimimos por pantalla en hexadecimal el contenido de la cache
+    imprimir_contenido_cache(simul_cache);
     
     // sleep() de 1 segundo.
-    // todo sleep(1);
+    sleep(1);
 
-    // Imprimimos num_aciertos, num_fallos, t_access
+    // Imprimimos numero de aciertos, numero de fallos y tiempo de acceso
     t_access = globaltime / (num_aciertos + num_fallos);
     printf(
         "--- Stats CACHE ---\n\n"
@@ -164,21 +157,7 @@ int main(int argc, char *argv[])
         "Tiempo medio de acceso  = %d\n\n", num_aciertos, num_fallos, t_access);
 
     // Imprimimos el texto leido caracter a caracter desde cache
-    // Recorremos fila por fila la cache
-    printf("--- Caracteres almacenados en CACHE ---\n\n");
-    for(int i = 0; i < NUM_FILAS; i++)
-    {
-        // Si el primer byte de la linea es distinto de '#', 
-        // significa que hay bloque mapeado en esa fila y lo imprimimos
-        if(simul_cache[i].data[0] != 0x23)
-        {
-            // Imprimimos caracter a caracter el texto leido en una fila
-            for(int j = 0; j < TAM_LINEA; j++)
-            {
-                printf("%c", simul_cache[i].data[j]);
-            }   
-        }
-    }
+    imprimir_caracteres_cache(simul_cache);
 
     // Volcamos el contenido de la cache en CONTENTS_CACHE.bin
     volcar_cache(simul_cache);
@@ -187,18 +166,18 @@ int main(int argc, char *argv[])
     fclose(fd_accesos_memoria);
     fclose(fd_contents_ram);
 
-    printf("\n_________________________________________EXIT\n\n");
+    printf("\n_________________________________________EXIT_SUCCES\n\n");
     return EXIT_SUCCESS;
 }
 
 /* _________________________________________
    Inicio definicion de funciones */
 
-// Funciones del programa
+// * Funciones del programa
 /**
- * @brief   inicializamos los valores de etq y data
+ * @brief Inicializa los valores de etq y data
  * 
- * @param[out] simul_cache   Contenedor de las lineas y etiquetas de cache 
+ * @param[out] simul_cache Contenedor de las lineas y etiquetas de cache 
  */
 void limpiar_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
 {
@@ -207,7 +186,7 @@ void limpiar_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
         // inicializamos los campos etq a FF
         simul_cache[i].etq = 0xFF;
 
-        // inicializamos los campos data a 23 o 0010 0011
+        // inicializamos los campos data a 23 (#)
         for(int j = 0; j < TAM_LINEA; j++)
         {
             simul_cache[i].data[j] = 0x23;
@@ -218,7 +197,7 @@ void limpiar_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
 /**
  * @brief descompone la direccion de memoria en etiqueta, palabra, linea, bloque
  * 
- * @param[in] addr      Direccion de memoria actual   
+ * @param[in] addr Direccion de memoria actual   
  * @param[out] etq          
  * @param[out] palabra     
  * @param[out] linea       
@@ -226,6 +205,7 @@ void limpiar_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
  */
 void parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, int *bloque)
 {
+    // Ejemplo
     // +-------------+----------+------------+
     // |  0 0 1 0 0  |  0 1 0   |  1 1 1 0   |
     // +-------------+----------+------------+
@@ -247,7 +227,8 @@ void parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, in
 }
 
 /**
- * @brief 
+ * @brief Carga en la línea correspondiente el bloque desde la RAM
+ *        Actualiza la etiqueta en la CACHE
  * 
  * @param[out] simul_cache   Simulador cache. Contiene las lineas  
  * @param[in] simul_ram     Simulador RAM. Contiene los bloques        
@@ -276,7 +257,9 @@ void tratar_fallo(T_CACHE_LINE *simul_cache, char *simul_ram, int etq, int linea
 }
 
 /**
- * @param[in,out] simul_cache     
+ * @brief Vuelca el contenido de la cache en un nuevo archivo binario
+ * 
+ * @param[in] simul_cache     
  */
 void volcar_cache(T_CACHE_LINE *simul_cache)
 {
@@ -295,10 +278,11 @@ void volcar_cache(T_CACHE_LINE *simul_cache)
     fclose(fd_contents_cache);
 }
 
-// Funciones auxiliares
+// * Funciones auxiliares
 
 int comprobar_lectura_ficheros(FILE *fd_accesos_memoria, FILE *fd_contents_ram)
 {
+    // Comprueba que existen los ficheros "accesos_memoria.txt" y "CONTENTS_RAM.bin"
     int archivos_leidos = 0;
     if(fd_accesos_memoria == NULL)
     {
@@ -324,25 +308,41 @@ int comprobar_lectura_ficheros(FILE *fd_accesos_memoria, FILE *fd_contents_ram)
     return archivos_leidos;
 }
 
-void imprimir_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
+void imprimir_contenido_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
 {
+    // Imprime en hexadecimal los datos almacenados en CACHE
+    // Los datos se imprimen de izquierda a derecha de mayor a menor peso. 
+    printf("--- Contenido volcado de la CACHE ---\n\n");
     for(int i = 0; i < NUM_FILAS; i++)
     {
-        // inicializamos los campos etq a FF
-        printf("simul_cache[%d].etq = %02X\n", i, simul_cache[i].etq);
-
-        // inicializamos los campos data a 23 o 0010 0011
-        for(int j = 0; j < TAM_LINEA; j++)
+        printf("%02X   Datos: ", simul_cache[i].etq);
+        for(int j = TAM_LINEA - 1; j >= 0; j--)
         {
-            printf("simul_cache[%d].data[%.2d] = %02X\n", i, j, simul_cache[i].data[j]);
+            printf("%02X ", simul_cache[i].data[j]);
         }
-        printf("\n");
+        printf("\n\n");
     }
 }
 
-void clearBuffer()
+void imprimir_caracteres_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
 {
-    while (getchar() != '\n');
+    // Imprime los caracteres almacenados en CACHE
+    // Recorremos fila por fila la cache
+    printf("--- Caracteres almacenados en CACHE ---\n\n");
+    for(int i = 0; i < NUM_FILAS; i++)
+    {
+        // Si el primer byte de la linea es distinto de '#', 
+        // significa que hay bloque mapeado en esa fila y lo imprimimos
+        if(simul_cache[i].data[0] != 0x23)
+        {
+            // Imprimimos caracter a caracter el texto leido en una fila
+            for(int j = 0; j < TAM_LINEA; j++)
+            {
+                printf("%c", simul_cache[i].data[j]);
+            }   
+        }
+    }
+    printf("\n");
 }
 
 // Comentarios DEBUG 
