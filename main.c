@@ -106,14 +106,7 @@ int main(int argc, char *argv[])
 
         parsear_direccion(addr, &etq, &palabra, &linea, &bloque);
         
-        // todo borrar
-        printf("--------------- DEBUG ---------------\n");
-        printf("addr    = %03X (Hex)\n", addr);
-        printf("etq     = %d\n", etq);
-        printf("linea   = %d\n", linea);
-        printf("palabra = %d\n", palabra);
-        printf("bloque  = %d\n", bloque);
-        printf("-------------------------------------\n\n");
+        printf("-> 0x%03X\n", addr);
 
         // Comprobamos si el bloque esta mapeado en cache o no 
         // Comparamos la etiqueta de la linea correspondeinte con la etiqueta de la direccion de memoria
@@ -123,7 +116,7 @@ int main(int argc, char *argv[])
 
             ++num_fallos;
 
-            printf(YELLOW"T: %d, Fallo de Cache: %d, ADDR: 0x%03X, Etq: %X, Linea: %02X, Palabra: %02X, Bloque: %02X\n"RESET,
+            printf(YELLOW"T: %d, Fallo de CACHE: %d, ADDR: 0x%03X, Etq: %X, Linea: %02X, Palabra: %02X, Bloque: %02X\n"RESET,
                 globaltime, num_fallos, addr, etq, linea, palabra, bloque);
             
             tratar_fallo(simul_cache, simul_ram, etq, linea, bloque);
@@ -134,7 +127,7 @@ int main(int argc, char *argv[])
         // Leemos linea de la cache
         globaltime++;
         num_aciertos++;
-        printf("T: %d, Acierto de CACHE, ADDR %04X Label %X, linea %02X, palabra %02X, DATO %02X\n\n\n", 
+        printf(GREEN"T: %d, Acierto de CACHE, ADDR %04X Label %X, linea %02X, palabra %02X, DATO %02X\n\n\n"RESET, 
             globaltime, addr, etq, linea, palabra, bloque);
 
         // Cada caracter leido se añade a la variable llamada texto
@@ -160,7 +153,6 @@ int main(int argc, char *argv[])
     }
     
     // sleep() de 1 segundo.
-    // todo descomentar
     // todo sleep(1);
 
     // Imprimimos num_aciertos, num_fallos, t_access
@@ -172,6 +164,7 @@ int main(int argc, char *argv[])
 
     // Imprimimos el texto leido caracter a caracter desde cache
     // Recorremos fila por fila la cache
+    printf("Contenidos cache:\n");
     for(int i = 0; i < NUM_FILAS; i++)
     {
         // Si el primer byte de la linea es distinto de '#', 
@@ -186,6 +179,7 @@ int main(int argc, char *argv[])
         }
     }
 
+    // Volcamos el contenido de la cache en CONTENTS_CACHE.bin
     volcar_cache(simul_cache);
 
     // Cerramos los file descriptor
@@ -274,30 +268,10 @@ void tratar_fallo(T_CACHE_LINE *simul_cache, char *simul_ram, int etq, int linea
         bloque++;
     } 
 
-    // todo borrar
-    printf("DEBUG %c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n", 
-         simul_cache[linea].data[0]
-        ,simul_cache[linea].data[1]
-        ,simul_cache[linea].data[2]
-        ,simul_cache[linea].data[3]
-        ,simul_cache[linea].data[4]
-        ,simul_cache[linea].data[5]
-        ,simul_cache[linea].data[6]
-        ,simul_cache[linea].data[7]
-        ,simul_cache[linea].data[8]
-        ,simul_cache[linea].data[9]
-        ,simul_cache[linea].data[10]
-        ,simul_cache[linea].data[11]
-        ,simul_cache[linea].data[12]
-        ,simul_cache[linea].data[13]
-        ,simul_cache[linea].data[14]
-        ,simul_cache[linea].data[15]
-    );
-
     // Se actualiza el campo etiqueta de la cache simul_cache[linea].etq = etq
     simul_cache[linea].etq = etq;    
     
-    printf(GREEN"Bloque mapeado en la cache!\n"RESET);
+    printf("Bloque mapeado en la cache!\n"); 
 }
 
 /**
@@ -370,3 +344,32 @@ void clearBuffer()
     while (getchar() != '\n');
 }
 
+// Comentarios DEBUG 
+
+// printf("--------------- DEBUG ---------------\n");
+// printf("addr    = %03X (Hex)\n", addr);
+// printf("etq     = %d\n", etq);
+// printf("linea   = %d\n", linea);
+// printf("palabra = %d\n", palabra);
+// printf("bloque  = %d\n", bloque);
+// printf("-------------------------------------\n\n");
+
+
+// printf("DEBUG %c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n", 
+//      simul_cache[linea].data[0]
+//     ,simul_cache[linea].data[1]
+//     ,simul_cache[linea].data[2]
+//     ,simul_cache[linea].data[3]
+//     ,simul_cache[linea].data[4]
+//     ,simul_cache[linea].data[5]
+//     ,simul_cache[linea].data[6]
+//     ,simul_cache[linea].data[7]
+//     ,simul_cache[linea].data[8]
+//     ,simul_cache[linea].data[9]
+//     ,simul_cache[linea].data[10]
+//     ,simul_cache[linea].data[11]
+//     ,simul_cache[linea].data[12]
+//     ,simul_cache[linea].data[13]
+//     ,simul_cache[linea].data[14]
+//     ,simul_cache[linea].data[15]
+// );
