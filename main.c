@@ -118,8 +118,8 @@ int main(int argc, char *argv[])
             printf(YELLOW"T: %d, Fallo de CACHE: %d, ADDR: 0x%03X, Etq: %02X, Linea: %01X, Palabra: %01X, Bloque: %02X\n"RESET,
                 globaltime, num_fallos, addr, etq, linea, palabra, bloque);
             tratar_fallo(simul_cache, simul_ram, etq, linea, bloque);
+            // Imprimimos por pantalla en hexadecimal el contenido de la cache
             imprimir_contenido_cache(simul_cache);
-            printf("\n\n");
             globaltime += 20;
         }   
         else
@@ -127,25 +127,26 @@ int main(int argc, char *argv[])
             // Si ya estaba mapeado desde antes, imprimimos el acierto
             globaltime++;
             num_aciertos++;
-            printf(GREEN"T: %d, Acierto de CACHE, ADDR 0x%03X, Etq: %02X, Linea: %01X, Palabra: %01X, Bloque: %02X\n\n\n"RESET, 
+            printf(GREEN"T: %d, Acierto de CACHE:  ADDR 0x%03X, Etq: %02X, Linea: %01X, Palabra: %01X, Bloque: %02X\n"RESET, 
             globaltime, addr, etq, linea, palabra, bloque);
+            // Imprimimos por pantalla en hexadecimal el contenido de la cache
+            imprimir_contenido_cache(simul_cache);
         }
         
         // Cada caracter leido se añade a la variable llamada texto
         texto[caracteres_leidos] = simul_cache[linea].data[palabra];
         texto[++caracteres_leidos] = '\0';
 
-        // todo sleep() de 1 segundo.
-        // sleep(1);
+        // sleep() de 1 segundo.
+        sleep(1);
+        printf("\n");
+        
     }
-
-    //  Imprimimos por pantalla en hexadecimal el contenido de la cache
-    imprimir_contenido_cache(simul_cache);
 
     // Imprimimos numero de aciertos, numero de fallos y tiempo de acceso
     t_access = (float)globaltime / ((float)num_aciertos + (float)num_fallos);
     printf(
-        "--- Stats CACHE ---\n\n"
+        "\n\n--- Stats CACHE ---\n\n"
         "Accesos totales = %d\n" 
         "Fallos          = %d\n"
         "Tiempo medio    = %.3f\n\n", num_aciertos + num_fallos, num_fallos, t_access);
@@ -299,7 +300,7 @@ int comprobar_lectura_ficheros(FILE *fd_accesos_memoria, FILE *fd_contents_ram)
     }
     else
     {
-        printf(GREEN"\"accesos_memoria.txt\" y \"CONTENTS_RAM.bin\" se han abieto correctamente.\n\n"RESET);
+        printf(GREEN"\"accesos_memoria.txt\" y \"CONTENTS_RAM.bin\" se han abieto correctamente.\n\n\n"RESET);
         archivos_leidos = 1;
     }
     return archivos_leidos;
@@ -308,7 +309,7 @@ int comprobar_lectura_ficheros(FILE *fd_accesos_memoria, FILE *fd_contents_ram)
 void imprimir_contenido_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
 {
     // Imprime en hexadecimal los datos almacenados en CACHE
-    printf("--- Contenido volcado de la CACHE ---\n\n");
+    printf("--- Contenido volcado de la CACHE: ---\n\n");
     for(int i = 0; i < NUM_FILAS; i++)
     {
         printf("[ %02X   Datos: ", simul_cache[i].etq);
