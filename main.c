@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
         texto[++caracteres_leidos] = '\0';
 
         // sleep de 1 segundo.
-        // sleep(1);
+        sleep(1);
         printf("\n");
         
     }
