@@ -84,8 +84,8 @@ int main(int argc, char *argv[])
     int globaltime        = 0, // Tiempo total de acceso a la CACHE
         num_fallos        = 0,
         num_aciertos      = 0, 
-        t_access          = 0, // Tiempo medio de acceso a la CACHE
         caracteres_leidos = 0; // Numero de caracteres leidos desde la cache
+    float t_access = 0; // Tiempo medio de acceso a la CACHE
     unsigned int addr = 0;
 
     // Inicializamos los valores de la cache con valores por defecto
@@ -130,8 +130,6 @@ int main(int argc, char *argv[])
             printf(GREEN"T: %d, Acierto de CACHE, ADDR 0x%03X, Etq: %02X, Linea: %01X, Palabra: %01X, Bloque: %02X\n\n\n"RESET, 
             globaltime, addr, etq, linea, palabra, bloque);
         }
-
-        printf("DEBUG: letra leida: %c\n", simul_cache[linea].data[palabra]);
         
         // Cada caracter leido se añade a la variable llamada texto
         texto[caracteres_leidos] = simul_cache[linea].data[palabra];
@@ -145,12 +143,12 @@ int main(int argc, char *argv[])
     imprimir_contenido_cache(simul_cache);
 
     // Imprimimos numero de aciertos, numero de fallos y tiempo de acceso
-    t_access = globaltime / (num_aciertos + num_fallos);
+    t_access = (float)globaltime / ((float)num_aciertos + (float)num_fallos);
     printf(
         "--- Stats CACHE ---\n\n"
         "Accesos totales = %d\n" 
         "Fallos          = %d\n"
-        "Tiempo medio    = %d\n\n", num_aciertos + num_fallos, num_fallos, t_access);
+        "Tiempo medio    = %.3f\n\n", num_aciertos + num_fallos, num_fallos, t_access);
 
     // Imprimimos el texto leido caracter a caracter desde cache
     printf("--- Texto leido ---\n\n");
