@@ -49,11 +49,11 @@ typedef struct
     unsigned char etq;             // Guarda el valor de la etiqueta
     unsigned char data[TAM_LINEA]; // Guarda [TAM_LINEA] Bytes (palabras)
 } 
-T_CACHE_LINE;
+t_cache_line;
 
 // Funciones del programa
 void limpiar_cache(
-    T_CACHE_LINE tbl[NUM_FILAS]
+    t_cache_line tbl[NUM_FILAS]
 );
 void parsear_direccion(
     unsigned int addr, 
@@ -63,14 +63,14 @@ void parsear_direccion(
     int *bloque
 );
 void tratar_fallo(
-    T_CACHE_LINE *tbl, 
+    t_cache_line *tbl, 
     char *simul_ram, 
     int etq, 
     int linea, 
     int bloque
 );
 void volcar_cache(
-    T_CACHE_LINE *tbl
+    t_cache_line *tbl
 );
     
 // Funciones auxiliares
@@ -79,7 +79,7 @@ int comprobar_lectura_ficheros(
     FILE *fd_contents_ram
 );
 void imprimir_contenido_cache(
-    T_CACHE_LINE tbl[NUM_FILAS]
+    t_cache_line tbl[NUM_FILAS]
 );
 
 /* _________________________________________
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
 
     // Declaracion de variables
-    T_CACHE_LINE simul_cache[NUM_FILAS] = {0};
+    t_cache_line simul_cache[NUM_FILAS] = {0};
     char simul_ram[TAM_RAM] = {0},
          texto[TAM_TEXTO]   = {0};
     int globaltime        = 0, // Tiempo total de acceso a la CACHE
@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
  * @param[out] tbl Corresponde a simul_cache en main()
  *                 Contenedor de las lineas y etiquetas de cache.
  */
-void limpiar_cache(T_CACHE_LINE tbl[NUM_FILAS])
+void limpiar_cache(t_cache_line tbl[NUM_FILAS])
 {
     for(int i = 0; i < NUM_FILAS; i++)
     {
@@ -266,7 +266,7 @@ void parsear_direccion(
  * @param[in] bloque       
  */
 void tratar_fallo(
-    T_CACHE_LINE *tbl, 
+    t_cache_line *tbl, 
     char *simul_ram, 
     int etq, 
     int linea, 
@@ -291,7 +291,7 @@ void tratar_fallo(
  * 
  * @param[in] tbl     
  */
-void volcar_cache(T_CACHE_LINE *tbl)
+void volcar_cache(t_cache_line *tbl)
 {
     // Creamos un archivo binario llamado CONTENTS_CACHE.bin
     FILE *fd_contents_cache = fopen("CONTENTS_CACHE.bin", "wb");
@@ -344,7 +344,7 @@ int comprobar_lectura_ficheros(FILE *fd_accesos_memoria, FILE *fd_contents_ram)
     return archivos_leidos;
 }
 
-void imprimir_contenido_cache(T_CACHE_LINE tbl[NUM_FILAS])
+void imprimir_contenido_cache(t_cache_line tbl[NUM_FILAS])
 {
     // Imprime en hexadecimal los datos almacenados en CACHE
     printf("--- Contenido volcado de la CACHE: ---\n\n");
