@@ -118,27 +118,31 @@ int main(int argc, char *argv[])
             printf(YELLOW"T: %d, Fallo de CACHE: %d, ADDR: 0x%03X, Etq: %02X, Linea: %01X, Palabra: %01X, Bloque: %02X\n"RESET,
                 globaltime, num_fallos, addr, etq, linea, palabra, bloque);
             tratar_fallo(simul_cache, simul_ram, etq, linea, bloque);
+            imprimir_contenido_cache(simul_cache);
+            printf("\n\n");
             globaltime += 20;
         }   
         else
         {
-             // Si ya estaba mapeado desde antes, imprimimos el acierto
+            // Si ya estaba mapeado desde antes, imprimimos el acierto
             globaltime++;
             num_aciertos++;
             printf(GREEN"T: %d, Acierto de CACHE, ADDR 0x%03X, Etq: %02X, Linea: %01X, Palabra: %01X, Bloque: %02X\n\n\n"RESET, 
             globaltime, addr, etq, linea, palabra, bloque);
         }
+
+        printf("DEBUG: letra leida: %c\n", simul_cache[linea].data[palabra]);
         
         // Cada caracter leido se añade a la variable llamada texto
         texto[caracteres_leidos] = simul_cache[linea].data[palabra];
         texto[++caracteres_leidos] = '\0';
+
+        // todo sleep() de 1 segundo.
+        // sleep(1);
     }
 
     //  Imprimimos por pantalla en hexadecimal el contenido de la cache
     imprimir_contenido_cache(simul_cache);
-    
-    // sleep() de 1 segundo.
-    sleep(1);
 
     // Imprimimos numero de aciertos, numero de fallos y tiempo de acceso
     t_access = globaltime / (num_aciertos + num_fallos);
@@ -150,7 +154,7 @@ int main(int argc, char *argv[])
 
     // Imprimimos el texto leido caracter a caracter desde cache
     printf("--- Texto leido ---\n\n");
-    printf("%s", texto);
+    printf("\"%s\"", texto);
     
     // Volcamos el contenido de la cache en CONTENTS_CACHE.bin
     volcar_cache(simul_cache);
@@ -239,14 +243,13 @@ void tratar_fallo(T_CACHE_LINE *simul_cache, char *simul_ram, int etq, int linea
     // Se traen los 16 bytes de datos del bloque a la linea
     for(int i = 0; i < TAM_LINEA; i++)
     {
-        simul_cache[linea].data[i] = simul_ram[bloque];
-        bloque++;
+        simul_cache[linea].data[i] = simul_ram[TAM_LINEA * bloque + i];
     } 
 
     // Se actualiza el campo etiqueta de la cache simul_cache[linea].etq = etq
     simul_cache[linea].etq = etq;    
     
-    printf("Bloque cargado en la cache!\n\n\n"); 
+    printf("Bloque cargado en la cache!\n"); 
 }
 
 /**
