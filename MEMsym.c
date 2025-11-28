@@ -153,7 +153,6 @@ int main(int argc, char *argv[])
         else
         {
             // Si ya estaba mapeado desde antes, imprimimos el acierto
-            globaltime++;
             num_aciertos++;
             printf(GREEN
                 "T: %d, Acierto de CACHE:  ADDR 0x%03X, Etq: %02X, Linea: %01X, "
@@ -161,6 +160,7 @@ int main(int argc, char *argv[])
                 globaltime, addr, etq, linea, palabra, bloque);
             // Imprimimos por pantalla en hexadecimal el contenido de la cache
             imprimir_contenido_cache(simul_cache);
+            globaltime++;
         }
         
         // Cada caracter leido se añade a la variable llamada texto

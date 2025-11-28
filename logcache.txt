@@ -51,7 +51,7 @@ Bloque cargado en la cache!
 
 
 -> 0x430
-T: 41, Acierto de CACHE:  ADDR 0x430, Etq: 08, Linea: 3, Palabra: 0, Bloque: 43
+T: 40, Acierto de CACHE:  ADDR 0x430, Etq: 08, Linea: 3, Palabra: 0, Bloque: 43
 --- Contenido volcado de la CACHE: ---
 
 [ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
@@ -95,7 +95,7 @@ Bloque cargado en la cache!
 
 
 -> 0x595
-T: 62, Acierto de CACHE:  ADDR 0x595, Etq: 0B, Linea: 1, Palabra: 5, Bloque: 59
+T: 61, Acierto de CACHE:  ADDR 0x595, Etq: 0B, Linea: 1, Palabra: 5, Bloque: 59
 --- Contenido volcado de la CACHE: ---
 
 [ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
@@ -116,7 +116,7 @@ T: 62, Acierto de CACHE:  ADDR 0x595, Etq: 0B, Linea: 1, Palabra: 5, Bloque: 59
 
 
 -> 0x596
-T: 63, Acierto de CACHE:  ADDR 0x596, Etq: 0B, Linea: 1, Palabra: 6, Bloque: 59
+T: 62, Acierto de CACHE:  ADDR 0x596, Etq: 0B, Linea: 1, Palabra: 6, Bloque: 59
 --- Contenido volcado de la CACHE: ---
 
 [ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
@@ -252,7 +252,7 @@ Bloque cargado en la cache!
 
 
 -> 0xFC0
-T: 164, Acierto de CACHE:  ADDR 0xFC0, Etq: 1F, Linea: 4, Palabra: 0, Bloque: FC
+T: 163, Acierto de CACHE:  ADDR 0xFC0, Etq: 1F, Linea: 4, Palabra: 0, Bloque: FC
 --- Contenido volcado de la CACHE: ---
 
 [ 16   Datos: 65 64 69 76 20 75 74 61 6E 65 73 20 6E 69 20 6F ]
@@ -296,7 +296,7 @@ Bloque cargado en la cache!
 
 
 -> 0xFC6
-T: 185, Acierto de CACHE:  ADDR 0xFC6, Etq: 1F, Linea: 4, Palabra: 6, Bloque: FC
+T: 184, Acierto de CACHE:  ADDR 0xFC6, Etq: 1F, Linea: 4, Palabra: 6, Bloque: FC
 --- Contenido volcado de la CACHE: ---
 
 [ 16   Datos: 65 64 69 76 20 75 74 61 6E 65 73 20 6E 69 20 6F ]
