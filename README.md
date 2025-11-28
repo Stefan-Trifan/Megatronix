@@ -1,11 +1,11 @@
 # Proyecto Megatronix
 
-<p align="center">
-  <img src="./assets/portada_github.png" alt="Portada" width="100%">
-</p>
-
 **Stefan Trifan y Alfredo Muñoz**  
 Sistemas Operativos · U‑tad · 2025
+
+<p align="center">
+  <img src="./assets/portada_github.png" alt="Portada" width="75%">
+</p>
 
 MEGATRONIX tenía un bus de memoria de 12 bits y usaba memoria física, con una caché de 8 líneas con correspondencia directa y 16 bytes por línea. Con lo que hemos aprendido en teoría, sabemos que la caché interpretará cada dirección de memoria recibida de la CPU en tres campos: palabra (4 bits), línea (3 bits) y etiqueta (5 bits).
 
