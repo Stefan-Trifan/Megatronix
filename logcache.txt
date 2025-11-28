@@ -3,106 +3,329 @@ _________________________________________START
 
 "accesos_memoria.txt" y "CONTENTS_RAM.bin" se han abieto correctamente.
 
+
 -> 0x22E
 T: 0, Fallo de CACHE: 1, ADDR: 0x22E, Etq: 04, Linea: 2, Palabra: E, Bloque: 22
 Cargando el bloque 22 en la linea 02
 Bloque cargado en la cache!
+--- Contenido volcado de la CACHE: ---
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ 04   Datos: 73 6F 6E 20 6D 65 75 71 20 2C 73 69 72 65 70 65 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
 
 
 -> 0x434
 T: 20, Fallo de CACHE: 2, ADDR: 0x434, Etq: 08, Linea: 3, Palabra: 4, Bloque: 43
 Cargando el bloque 43 en la linea 03
 Bloque cargado en la cache!
+--- Contenido volcado de la CACHE: ---
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ 04   Datos: 73 6F 6E 20 6D 65 75 71 20 2C 73 69 72 65 70 65 ]
+
+[ 08   Datos: 63 63 61 72 47 20 2E 69 54 20 2C 73 75 6D 69 78 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
 
 
 -> 0x430
-T: 41, Acierto de CACHE, ADDR 0x430, Etq: 08, Linea: 3, Palabra: 0, Bloque: 43
+T: 41, Acierto de CACHE:  ADDR 0x430, Etq: 08, Linea: 3, Palabra: 0, Bloque: 43
+--- Contenido volcado de la CACHE: ---
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ 04   Datos: 73 6F 6E 20 6D 65 75 71 20 2C 73 69 72 65 70 65 ]
+
+[ 08   Datos: 63 63 61 72 47 20 2E 69 54 20 2C 73 75 6D 69 78 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
 
 
 -> 0x598
 T: 41, Fallo de CACHE: 3, ADDR: 0x598, Etq: 0B, Linea: 1, Palabra: 8, Bloque: 59
 Cargando el bloque 59 en la linea 01
 Bloque cargado en la cache!
+--- Contenido volcado de la CACHE: ---
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ 0B   Datos: 63 69 6C 70 70 75 73 20 73 75 62 69 72 6F 69 72 ]
+
+[ 04   Datos: 73 6F 6E 20 6D 65 75 71 20 2C 73 69 72 65 70 65 ]
+
+[ 08   Datos: 63 63 61 72 47 20 2E 69 54 20 2C 73 75 6D 69 78 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
 
 
 -> 0x595
-T: 62, Acierto de CACHE, ADDR 0x595, Etq: 0B, Linea: 1, Palabra: 5, Bloque: 59
+T: 62, Acierto de CACHE:  ADDR 0x595, Etq: 0B, Linea: 1, Palabra: 5, Bloque: 59
+--- Contenido volcado de la CACHE: ---
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ 0B   Datos: 63 69 6C 70 70 75 73 20 73 75 62 69 72 6F 69 72 ]
+
+[ 04   Datos: 73 6F 6E 20 6D 65 75 71 20 2C 73 69 72 65 70 65 ]
+
+[ 08   Datos: 63 63 61 72 47 20 2E 69 54 20 2C 73 75 6D 69 78 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
 
 
 -> 0x596
-T: 63, Acierto de CACHE, ADDR 0x596, Etq: 0B, Linea: 1, Palabra: 6, Bloque: 59
+T: 63, Acierto de CACHE:  ADDR 0x596, Etq: 0B, Linea: 1, Palabra: 6, Bloque: 59
+--- Contenido volcado de la CACHE: ---
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ 0B   Datos: 63 69 6C 70 70 75 73 20 73 75 62 69 72 6F 69 72 ]
+
+[ 04   Datos: 73 6F 6E 20 6D 65 75 71 20 2C 73 69 72 65 70 65 ]
+
+[ 08   Datos: 63 63 61 72 47 20 2E 69 54 20 2C 73 75 6D 69 78 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
 
 
 -> 0xC77
 T: 63, Fallo de CACHE: 4, ADDR: 0xC77, Etq: 18, Linea: 7, Palabra: 7, Bloque: C7
 Cargando el bloque C7 en la linea 07
 Bloque cargado en la cache!
+--- Contenido volcado de la CACHE: ---
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ 0B   Datos: 63 69 6C 70 70 75 73 20 73 75 62 69 72 6F 69 72 ]
+
+[ 04   Datos: 73 6F 6E 20 6D 65 75 71 20 2C 73 69 72 65 70 65 ]
+
+[ 08   Datos: 63 63 61 72 47 20 2E 69 54 20 2C 73 75 6D 69 78 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ 18   Datos: 6D 61 74 20 6F 6D 65 6E 20 6D 61 69 20 6D 75 63 ]
 
 
 -> 0xB09
 T: 83, Fallo de CACHE: 5, ADDR: 0xB09, Etq: 16, Linea: 0, Palabra: 9, Bloque: B0
 Cargando el bloque B0 en la linea 00
 Bloque cargado en la cache!
+--- Contenido volcado de la CACHE: ---
+
+[ 16   Datos: 65 64 69 76 20 75 74 61 6E 65 73 20 6E 69 20 6F ]
+
+[ 0B   Datos: 63 69 6C 70 70 75 73 20 73 75 62 69 72 6F 69 72 ]
+
+[ 04   Datos: 73 6F 6E 20 6D 65 75 71 20 2C 73 69 72 65 70 65 ]
+
+[ 08   Datos: 63 63 61 72 47 20 2E 69 54 20 2C 73 75 6D 69 78 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ 18   Datos: 6D 61 74 20 6F 6D 65 6E 20 6D 61 69 20 6D 75 63 ]
 
 
 -> 0x63A
 T: 103, Fallo de CACHE: 6, ADDR: 0x63A, Etq: 0C, Linea: 3, Palabra: A, Bloque: 63
 Cargando el bloque 63 en la linea 03
 Bloque cargado en la cache!
+--- Contenido volcado de la CACHE: ---
+
+[ 16   Datos: 65 64 69 76 20 75 74 61 6E 65 73 20 6E 69 20 6F ]
+
+[ 0B   Datos: 63 69 6C 70 70 75 73 20 73 75 62 69 72 6F 69 72 ]
+
+[ 04   Datos: 73 6F 6E 20 6D 65 75 71 20 2C 73 69 72 65 70 65 ]
+
+[ 0C   Datos: 20 65 75 71 65 6E 20 6D 75 69 6C 69 73 6E 6F 63 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ 18   Datos: 6D 61 74 20 6F 6D 65 6E 20 6D 61 69 20 6D 75 63 ]
 
 
 -> 0xFC4
 T: 123, Fallo de CACHE: 7, ADDR: 0xFC4, Etq: 1F, Linea: 4, Palabra: 4, Bloque: FC
 Cargando el bloque FC en la linea 04
 Bloque cargado en la cache!
+--- Contenido volcado de la CACHE: ---
+
+[ 16   Datos: 65 64 69 76 20 75 74 61 6E 65 73 20 6E 69 20 6F ]
+
+[ 0B   Datos: 63 69 6C 70 70 75 73 20 73 75 62 69 72 6F 69 72 ]
+
+[ 04   Datos: 73 6F 6E 20 6D 65 75 71 20 2C 73 69 72 65 70 65 ]
+
+[ 0C   Datos: 20 65 75 71 65 6E 20 6D 75 69 6C 69 73 6E 6F 63 ]
+
+[ 1F   Datos: 65 63 20 73 69 6D 72 61 20 6E 69 20 65 72 6F 66 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ 18   Datos: 6D 61 74 20 6F 6D 65 6E 20 6D 61 69 20 6D 75 63 ]
 
 
 -> 0x81C
 T: 143, Fallo de CACHE: 8, ADDR: 0x81C, Etq: 10, Linea: 1, Palabra: C, Bloque: 81
 Cargando el bloque 81 en la linea 01
 Bloque cargado en la cache!
+--- Contenido volcado de la CACHE: ---
+
+[ 16   Datos: 65 64 69 76 20 75 74 61 6E 65 73 20 6E 69 20 6F ]
+
+[ 10   Datos: 43 20 74 65 20 2E 6C 70 20 6D 75 6E 75 62 69 72 ]
+
+[ 04   Datos: 73 6F 6E 20 6D 65 75 71 20 2C 73 69 72 65 70 65 ]
+
+[ 0C   Datos: 20 65 75 71 65 6E 20 6D 75 69 6C 69 73 6E 6F 63 ]
+
+[ 1F   Datos: 65 63 20 73 69 6D 72 61 20 6E 69 20 65 72 6F 66 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ 18   Datos: 6D 61 74 20 6F 6D 65 6E 20 6D 61 69 20 6D 75 63 ]
 
 
 -> 0xFC0
-T: 164, Acierto de CACHE, ADDR 0xFC0, Etq: 1F, Linea: 4, Palabra: 0, Bloque: FC
+T: 164, Acierto de CACHE:  ADDR 0xFC0, Etq: 1F, Linea: 4, Palabra: 0, Bloque: FC
+--- Contenido volcado de la CACHE: ---
+
+[ 16   Datos: 65 64 69 76 20 75 74 61 6E 65 73 20 6E 69 20 6F ]
+
+[ 10   Datos: 43 20 74 65 20 2E 6C 70 20 6D 75 6E 75 62 69 72 ]
+
+[ 04   Datos: 73 6F 6E 20 6D 65 75 71 20 2C 73 69 72 65 70 65 ]
+
+[ 0C   Datos: 20 65 75 71 65 6E 20 6D 75 69 6C 69 73 6E 6F 63 ]
+
+[ 1F   Datos: 65 63 20 73 69 6D 72 61 20 6E 69 20 65 72 6F 66 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ 18   Datos: 6D 61 74 20 6F 6D 65 6E 20 6D 61 69 20 6D 75 63 ]
 
 
 -> 0x062
 T: 164, Fallo de CACHE: 9, ADDR: 0x062, Etq: 00, Linea: 6, Palabra: 2, Bloque: 06
 Cargando el bloque 6 en la linea 06
 Bloque cargado en la cache!
+--- Contenido volcado de la CACHE: ---
 
+[ 16   Datos: 65 64 69 76 20 75 74 61 6E 65 73 20 6E 69 20 6F ]
 
--> 0xFC6
-T: 185, Acierto de CACHE, ADDR 0xFC6, Etq: 1F, Linea: 4, Palabra: 6, Bloque: FC
+[ 10   Datos: 43 20 74 65 20 2E 6C 70 20 6D 75 6E 75 62 69 72 ]
 
+[ 04   Datos: 73 6F 6E 20 6D 65 75 71 20 2C 73 69 72 65 70 65 ]
 
---- Contenido volcado de la CACHE ---
+[ 0C   Datos: 20 65 75 71 65 6E 20 6D 75 69 6C 69 73 6E 6F 63 ]
 
-[ 16   Datos: 6E 20 2C 69 74 61 6C 61 50 20 6D 75 69 64 69 73 ]
-
-[ 10   Datos: 64 75 61 20 74 69 62 61 74 63 61 69 20 61 74 61 ]
-
-[ 04   Datos: 74 6E 65 69 74 61 70 20 2C 61 6E 69 6C 69 74 61 ]
-
-[ 0C   Datos: 6E 69 66 20 64 61 20 6D 65 75 71 20 3F 74 65 64 ]
-
-[ 1F   Datos: 68 69 6E 20 2C 6D 75 69 6E 6D 6F 20 6D 75 72 6F ]
+[ 1F   Datos: 65 63 20 73 69 6D 72 61 20 6E 69 20 65 72 6F 66 ]
 
 [ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
 
-[ 00   Datos: 65 64 6E 61 74 20 65 75 71 73 75 20 6F 75 51 20 ]
+[ 00   Datos: 64 61 20 6D 65 75 71 20 3F 74 65 64 75 6C 65 20 ]
 
-[ 18   Datos: 69 6E 20 2C 65 61 69 6C 69 67 69 76 20 73 69 62 ]
+[ 18   Datos: 6D 61 74 20 6F 6D 65 6E 20 6D 61 69 20 6D 75 63 ]
+
+
+-> 0xFC6
+T: 185, Acierto de CACHE:  ADDR 0xFC6, Etq: 1F, Linea: 4, Palabra: 6, Bloque: FC
+--- Contenido volcado de la CACHE: ---
+
+[ 16   Datos: 65 64 69 76 20 75 74 61 6E 65 73 20 6E 69 20 6F ]
+
+[ 10   Datos: 43 20 74 65 20 2E 6C 70 20 6D 75 6E 75 62 69 72 ]
+
+[ 04   Datos: 73 6F 6E 20 6D 65 75 71 20 2C 73 69 72 65 70 65 ]
+
+[ 0C   Datos: 20 65 75 71 65 6E 20 6D 75 69 6C 69 73 6E 6F 63 ]
+
+[ 1F   Datos: 65 63 20 73 69 6D 72 61 20 6E 69 20 65 72 6F 66 ]
+
+[ FF   Datos: 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 ]
+
+[ 00   Datos: 64 61 20 6D 65 75 71 20 3F 74 65 64 75 6C 65 20 ]
+
+[ 18   Datos: 6D 61 74 20 6F 6D 65 6E 20 6D 61 69 20 6D 75 63 ]
+
+
+
 
 --- Stats CACHE ---
 
 Accesos totales = 14
 Fallos          = 9
-Tiempo medio    = 13
+Tiempo medio    = 13.214
 
 --- Texto leido ---
 
-ntils ila  oum
+"osx bu tn efln"
 _________________________________________EXIT_SUCCES
 
