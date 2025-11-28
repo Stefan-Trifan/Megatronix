@@ -52,14 +52,14 @@ typedef struct
 T_CACHE_LINE;
 
 // Funciones del programa
-void limpiar_cache(T_CACHE_LINE simul_cache[NUM_FILAS]);
+void limpiar_cache(T_CACHE_LINE tbl[NUM_FILAS]);
 void parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, int *bloque);
-void tratar_fallo(T_CACHE_LINE *simul_cache, char *simul_ram, int etq, int linea, int bloque);
-void volcar_cache(T_CACHE_LINE *simul_cache);
+void tratar_fallo(T_CACHE_LINE *tbl, char *simul_ram, int etq, int linea, int bloque);
+void volcar_cache(T_CACHE_LINE *tbl);
     
 // Funciones auxiliares
 int comprobar_lectura_ficheros(FILE *fd_accesos_memoria, FILE *fd_contents_ram);
-void imprimir_contenido_cache(T_CACHE_LINE simul_cache[NUM_FILAS]);
+void imprimir_contenido_cache(T_CACHE_LINE tbl[NUM_FILAS]);
 
 /* _________________________________________
    Inicio main() */
@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
         texto[++caracteres_leidos] = '\0';
 
         // sleep() de 1 segundo.
-        sleep(1);
+        // sleep(1);
         printf("\n");
         
     }
@@ -173,19 +173,20 @@ int main(int argc, char *argv[])
 /**
  * @brief Inicializa los valores de etq y data
  * 
- * @param[out] simul_cache Contenedor de las lineas y etiquetas de cache 
+ * @param[out] tbl Corresponde a simul_cache en main()
+ *                 Contenedor de las lineas y etiquetas de cache.
  */
-void limpiar_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
+void limpiar_cache(T_CACHE_LINE tbl[NUM_FILAS])
 {
     for(int i = 0; i < NUM_FILAS; i++)
     {
         // inicializamos los campos etq a FF
-        simul_cache[i].etq = 0xFF;
+        tbl[i].etq = 0xFF;
 
         // inicializamos los campos data a 23 (#)
         for(int j = 0; j < TAM_LINEA; j++)
         {
-            simul_cache[i].data[j] = 0x23;
+            tbl[i].data[j] = 0x23;
         }
     }
 }
@@ -226,7 +227,7 @@ void parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, in
  * @brief Carga en la linea correspondiente el bloque desde la RAM
  *        Actualiza la etiqueta en la CACHE
  * 
- * @param[out] simul_cache Simulador cache. Contiene las lineas  
+ * @param[out] tbl Simulador cache. Contiene las lineas  
  * @param[in] simul_ram    Simulador RAM. Contiene los bloques        
  * @param[in] num_fallos 
  * @param[in] addr              
@@ -235,18 +236,18 @@ void parsear_direccion(unsigned int addr, int *etq, int *palabra, int *linea, in
  * @param[in] palabra     
  * @param[in] bloque       
  */
-void tratar_fallo(T_CACHE_LINE *simul_cache, char *simul_ram, int etq, int linea, int bloque)
+void tratar_fallo(T_CACHE_LINE *tbl, char *simul_ram, int etq, int linea, int bloque)
 {
     printf("Cargando el bloque %X en la linea %02X\n", bloque, linea);
 
     // Se traen los 16 bytes de datos del bloque a la linea
     for(int i = 0; i < TAM_LINEA; i++)
     {
-        simul_cache[linea].data[i] = simul_ram[TAM_LINEA * bloque + i];
+        tbl[linea].data[i] = simul_ram[TAM_LINEA * bloque + i];
     } 
 
-    // Se actualiza el campo etiqueta de la cache simul_cache[linea].etq = etq
-    simul_cache[linea].etq = etq;    
+    // Se actualiza el campo etiqueta de la cache tbl[linea].etq = etq
+    tbl[linea].etq = etq;    
     
     printf("Bloque cargado en la cache!\n"); 
 }
@@ -254,9 +255,9 @@ void tratar_fallo(T_CACHE_LINE *simul_cache, char *simul_ram, int etq, int linea
 /**
  * @brief Vuelca el contenido de la cache en un nuevo archivo binario
  * 
- * @param[in] simul_cache     
+ * @param[in] tbl     
  */
-void volcar_cache(T_CACHE_LINE *simul_cache)
+void volcar_cache(T_CACHE_LINE *tbl)
 {
     // Creamos un archivo binario llamado CONTENTS_CACHE.bin
     FILE *fd_contents_cache = fopen("CONTENTS_CACHE.bin", "wb");
@@ -267,7 +268,7 @@ void volcar_cache(T_CACHE_LINE *simul_cache)
     // El byte 128, es el byte 15 de la linea 8.
     for(int i = 0; i < NUM_FILAS; i++)
     {
-        fwrite(simul_cache[i].data, 1, TAM_LINEA, fd_contents_cache);
+        fwrite(tbl[i].data, 1, TAM_LINEA, fd_contents_cache);
     } 
 
     fclose(fd_contents_cache);
@@ -306,18 +307,18 @@ int comprobar_lectura_ficheros(FILE *fd_accesos_memoria, FILE *fd_contents_ram)
     return archivos_leidos;
 }
 
-void imprimir_contenido_cache(T_CACHE_LINE simul_cache[NUM_FILAS])
+void imprimir_contenido_cache(T_CACHE_LINE tbl[NUM_FILAS])
 {
     // Imprime en hexadecimal los datos almacenados en CACHE
     printf("--- Contenido volcado de la CACHE: ---\n\n");
     for(int i = 0; i < NUM_FILAS; i++)
     {
-        printf("[ %02X   Datos: ", simul_cache[i].etq);
+        printf("[ %02X   Datos: ", tbl[i].etq);
         // Los datos se imprimen de izquierda a derecha de mayor a menor peso. 
         // El byte situado más a la izquierda es el byte 15 de la linea y el situado a la derecha el byte 0.
         for(int j = TAM_LINEA - 1; j >= 0; j--)
         {
-            printf("%02X ", simul_cache[i].data[j]);
+            printf("%02X ", tbl[i].data[j]);
         }
         printf("]\n\n");
     }
