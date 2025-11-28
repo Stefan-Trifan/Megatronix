@@ -1,7 +1,8 @@
-# Proyecto Megatronix
 <p align="center">
   <img src="./assets/portada_github.png" alt="Portada" width="100%">
 </p>
+
+# Proyecto Megatronix
 
 **Stefan Trifan y Alfredo Muñoz**  
 Sistemas Operativos · U‑tad · 2025
