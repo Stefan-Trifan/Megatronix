@@ -81,6 +81,11 @@ int comprobar_lectura_ficheros(
 void imprimir_contenido_cache(
     t_cache_line tbl[NUM_FILAS]
 );
+void imprimir_stats(
+    int globaltime, 
+    int num_aciertos, 
+    int num_fallos
+);
 
 /* _________________________________________
    Inicio main() */
@@ -106,7 +111,6 @@ int main(int argc, char *argv[])
         num_fallos        = 0,
         num_aciertos      = 0, 
         caracteres_leidos = 0; // Numero de caracteres leidos desde la cache.
-    float t_access = 0; // Tiempo medio de acceso a la CACHE
     unsigned int addr = 0;
 
     // Inicializamos los valores de la cache con valores por defecto
@@ -170,12 +174,7 @@ int main(int argc, char *argv[])
     }
 
     // Imprimimos numero de aciertos, numero de fallos y tiempo de acceso
-    t_access = (float)globaltime / ((float)num_aciertos + (float)num_fallos);
-    printf(
-        "\n\n--- Stats CACHE ---\n\n"
-        "Accesos totales = %d\n" 
-        "Fallos          = %d\n"
-        "Tiempo medio    = %.3f\n\n", num_aciertos + num_fallos, num_fallos, t_access);
+    imprimir_stats(globaltime, num_aciertos, num_fallos);
 
     // Imprimimos el texto leido caracter a caracter desde cache
     printf("--- Texto leido ---\n\n");
@@ -360,4 +359,17 @@ void imprimir_contenido_cache(t_cache_line tbl[NUM_FILAS])
         }
         printf("]\n\n");
     }
+}
+
+void imprimir_stats(int globaltime, int num_aciertos, int num_fallos)
+{
+    // Imprime numero de aciertos, numero de fallos y tiempo de acceso
+    float t_access = 0; // Tiempo medio de acceso a la CACHE
+
+    t_access = (float)globaltime / ((float)num_aciertos + (float)num_fallos);
+    printf(
+        "\n\n--- Stats CACHE ---\n\n"
+        "Accesos totales = %d\n" 
+        "Fallos          = %d\n"
+        "Tiempo medio    = %.3f\n\n", num_aciertos + num_fallos, num_fallos, t_access);
 }
