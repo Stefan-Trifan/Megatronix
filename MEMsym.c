@@ -170,7 +170,6 @@ int main(int argc, char *argv[])
         // sleep de 1 segundo.
         sleep(1);
         printf("\n");
-        
     }
 
     // Imprimimos numero de aciertos, numero de fallos y tiempo de acceso
@@ -205,10 +204,10 @@ void limpiar_cache(t_cache_line tbl[NUM_FILAS])
 {
     for(int i = 0; i < NUM_FILAS; i++)
     {
-        // inicializamos los campos etq a FF
+        // Inicializamos los campos etq a FF
         tbl[i].etq = 0xFF;
 
-        // inicializamos los campos data a 23 (#)
+        // Inicializamos los campos data a 23 (#)
         for(int j = 0; j < TAM_LINEA; j++)
         {
             tbl[i].data[j] = 0x23;
