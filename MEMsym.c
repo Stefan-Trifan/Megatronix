@@ -5,7 +5,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 #define TAM_LINEA 16
@@ -34,11 +33,9 @@ void LimpiarCACHE(T_CACHE_LINE tbl[NUM_FILAS]) {
 	}
 }
 
-
-
 void ParsearDireccion(unsigned int addr, int *ETQ, int *palabra, int *linea, int *bloque)
 {
-    // Aseguramos que la dirección está en 12 bits
+    // Aseguramos que la dirección esta en 12 bits
     addr &= 4095; // 0x0FFF en decimal
 
     // palabra: últimos 4 bits (bits 0-3)
@@ -50,6 +47,18 @@ void ParsearDireccion(unsigned int addr, int *ETQ, int *palabra, int *linea, int
     // etiqueta: siguientes 5 bits (bits 7-11)
     *ETQ = (addr >> 7) & 31; // 31 = 0b11111 (5 bits encendidos)
 
-    // bloque: dirección base del bloque (múltiplo de 16)
+    // bloque: dirección base del bloque (multiplo de 16)
     *bloque = addr & (~15); // ~15 = todos menos los 4 bits menos significativos
+}
+
+void TratarFallo(T_CACHE_LINE *tbl, unsigned char *MRAM, int ETQ, int linea, int bloque) {
+
+    printf("Cargando bloque %X en línea %X\n", bloque, linea);
+
+    for (int i = 0; i < TAM_LINEA; ++i)
+        tbl[linea].Data[i] = MRAM[bloque + i];
+    
+    tbl[linea].ETQ = ETQ;
+
+    printf("Bloque cargado.\n");
 }
