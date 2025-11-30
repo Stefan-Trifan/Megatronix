@@ -64,7 +64,7 @@ void TratarFallo(T_CACHE_LINE *tbl, unsigned char *MRAM, int ETQ, int linea, int
 }
 
 void VolcarCACHE(T_CACHE_LINE *tbl) {
-    
+
     FILE *f = fopen("CONTENTS_CACHE.bin", "wb");
     if (!f) {
         printf("No se pudo crear CONTENTS_CACHE.bin\n");
@@ -75,4 +75,15 @@ void VolcarCACHE(T_CACHE_LINE *tbl) {
         fwrite(tbl[i].Data, 1, TAM_LINEA, f);
     }
     fclose(f);
+}
+
+void imprimirContenidoCache(T_CACHE_LINE tbl[NUM_FILAS]) {
+
+    for (int i = 0; i < NUM_FILAS; ++i) {
+        printf("Linea %X ETQ %X: ", i, tbl[i].ETQ);
+        
+        for (int j = TAM_LINEA - 1; j >= 0; --j)
+            printf("%02X ", tbl[i].Data[j]);
+        printf("\n");
+    }
 }
