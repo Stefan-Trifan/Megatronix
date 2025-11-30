@@ -1,7 +1,3 @@
-/*
- MEMsym - simulador de caché simple
- Compila: gcc -std=c11 -Wall -Wextra -o MEMsym main.c
-*/
 
 #include <stdio.h>
 #include <stdlib.h>
