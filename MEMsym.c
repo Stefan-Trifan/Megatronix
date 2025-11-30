@@ -62,3 +62,17 @@ void TratarFallo(T_CACHE_LINE *tbl, unsigned char *MRAM, int ETQ, int linea, int
 
     printf("Bloque cargado.\n");
 }
+
+void VolcarCACHE(T_CACHE_LINE *tbl) {
+    
+    FILE *f = fopen("CONTENTS_CACHE.bin", "wb");
+    if (!f) {
+        printf("No se pudo crear CONTENTS_CACHE.bin\n");
+        return;
+    }
+
+    for (int i = 0; i < NUM_FILAS; ++i) {
+        fwrite(tbl[i].Data, 1, TAM_LINEA, f);
+    }
+    fclose(f);
+}
