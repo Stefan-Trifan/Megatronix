@@ -25,6 +25,7 @@ void LimpiarCACHE(T_CACHE_LINE tbl[NUM_FILAS]);
 void VolcarCACHE(T_CACHE_LINE *tbl);
 void ParsearDireccion(unsigned int addr, int *ETQ, int *palabra, int *linea, int *bloque);
 void TratarFallo(T_CACHE_LINE *tbl, unsigned char *MRAM, int ETQ, int linea, int bloque);
+void imprimirContenidoCache(T_CACHE_LINE tbl[NUM_FILAS]);
 
 int main() {
     T_CACHE_LINE CACHE[NUM_FILAS];
@@ -44,9 +45,9 @@ int main() {
     fclose(f);
 
     // Leer direcciones
-    FILE *fd = fopen("dirs_memoria.txt", "r");
+    FILE *fd = fopen("accesos_memoria.txt", "r");
     if (!fd) {
-        printf("Error abriendo dirs_memoria.txt\n");
+        printf("Error abriendo accesos_memoria.txt\n");
         return -1;
     }
 
