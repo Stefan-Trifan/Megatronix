@@ -40,8 +40,8 @@
 #define YELLOW "\033[1;33m"
 #define RESET "\033[0m"
 
-#define FILE_ACCESOS_MEMORIA "./accesos_memoria.txt"
 #define FILE_CONTENTS_RAM "./CONTENTS_RAM.bin"
+#define FILE_ACCESOS_MEMORIA "./accesos_memoria.txt"
 
 // Estructura para linea de cache
 typedef struct 
